@@ -156,7 +156,6 @@ dependencies {
     minApi26Implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.21'
 
     //noinspection GradleDependency
-    minApi21Implementation "org.eclipse.jdt:ecj:3.13.0"
     minApi26Implementation "org.eclipse.jdt:ecj:3.26.0"
 
     minApi26Implementation "com.github.Cosmic-IDE:kotlinc-android:f49c67a8c0"
