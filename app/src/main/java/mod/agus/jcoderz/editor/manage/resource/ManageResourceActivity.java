@@ -155,9 +155,7 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
             hideShowOptionsButton(true);
         });
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.createNewButton,
-                new AddMarginOnApplyWindowInsetsListener(WindowInsetsCompat.Type.navigationBars(), WindowInsetsCompat.CONSUMED));
-    }
+    }  
 
     private void hideShowOptionsButton(boolean isHide) {
         binding.optionsLayout.animate()
