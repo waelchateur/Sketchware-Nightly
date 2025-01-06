@@ -167,7 +167,7 @@ dependencies {
     minApi21Implementation "org.eclipse.jdt:ecj:3.13.0"
     minApi26Implementation "org.eclipse.jdt:ecj:3.26.0"
 
-    minApi26Implementation "com.github.Cosmic-IDE:kotlinc-android:f49c67a8c0"
+    minApi26Implementation "com.github.Cosmic-Ide.kotlinc-android:kotlinc:2a0a6a7291"
 
     implementation "com.github.topjohnwu.libsu:core:5.0.4"
     implementation "dev.chrisbanes.insetter:insetter:0.6.1"
