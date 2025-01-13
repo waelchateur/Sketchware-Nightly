@@ -19,8 +19,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.angads25.filepicker.model.DialogConfigs;
@@ -48,10 +46,8 @@ import pro.sketchware.utility.SketchwareUtil;
 import pro.sketchware.utility.FilePathUtil;
 import pro.sketchware.utility.FileResConfig;
 import pro.sketchware.utility.FileUtil;
-import mod.hey.studios.code.SrcCodeEditorLegacy;
+import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
-import mod.hilal.saif.activities.tools.ConfigActivity;
-import mod.jbk.util.AddMarginOnApplyWindowInsetsListener;
 
 public class ManageJavaActivity extends BaseAppCompatActivity {
 
@@ -152,8 +148,6 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
             hideShowOptionsButton(true);
         });
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.createNewButton,
-                new AddMarginOnApplyWindowInsetsListener(WindowInsetsCompat.Type.navigationBars(), WindowInsetsCompat.CONSUMED));
     }
 
     private void hideShowOptionsButton(boolean isHide) {
@@ -509,13 +503,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
 
         public void goEditFile(int position) {
             Intent intent = new Intent();
-
-            if (ConfigActivity.isLegacyCeEnabled()) {
-                intent.setClass(getApplicationContext(), SrcCodeEditorLegacy.class);
-            } else {
-                intent.setClass(getApplicationContext(), mod.hey.studios.code.SrcCodeEditor.class);
-            }
-
+            intent.setClass(getApplicationContext(), SrcCodeEditor.class);
             intent.putExtra("java", "");
             intent.putExtra("title", getFileName(position));
             intent.putExtra("content", getItem(position));

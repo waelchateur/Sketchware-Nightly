@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.component;
 
+import static pro.sketchware.utility.GsonUtils.getGson;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,7 +30,6 @@ import com.github.angads25.filepicker.model.DialogConfigs;
 import com.github.angads25.filepicker.model.DialogProperties;
 import com.github.angads25.filepicker.view.FilePickerDialog;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -120,7 +121,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
     }
 
     private void readComponents(final String _path) {
-        componentsList = new Gson().fromJson(FileUtil.readFile(_path), Helper.TYPE_MAP_LIST);
+        componentsList = getGson().fromJson(FileUtil.readFile(_path), Helper.TYPE_MAP_LIST);
         if (componentsList != null && !componentsList.isEmpty()) {
             ComponentsAdapter adapter = new ComponentsAdapter(componentsList);
             Parcelable state = componentView.getLayoutManager().onSaveInstanceState();
@@ -193,7 +194,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
                         SketchwareUtil.toastError(Helper.getResString(R.string.invalid_component));
                     }
                 }
-                FileUtil.writeFile(COMPONENT_DIR, new Gson().toJson(componentsList));
+                FileUtil.writeFile(COMPONENT_DIR, getGson().toJson(componentsList));
                 readSettings();
                 dialog.dismiss();
             });
@@ -203,7 +204,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
             var component = components.get(0);
             if (ComponentsHandler.isValidComponent(component)) {
                 componentsList.add(component);
-                FileUtil.writeFile(COMPONENT_DIR, new Gson().toJson(componentsList));
+                FileUtil.writeFile(COMPONENT_DIR, getGson().toJson(componentsList));
                 readSettings();
             } else {
                 SketchwareUtil.toastError(Helper.getResString(R.string.invalid_component));
@@ -213,7 +214,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
 
     private void save(final HashMap<String, Object> _item) {
         componentsList.remove(_item);
-        FileUtil.writeFile(COMPONENT_DIR, new Gson().toJson(componentsList));
+        FileUtil.writeFile(COMPONENT_DIR, getGson().toJson(componentsList));
     }
 
     private void export(int position) {
@@ -225,7 +226,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
         dialog.b(Helper.getResString(R.string.common_word_yes), v -> {
             String fileName = componentName + ".json";
             String filePath = new File(COMPONENT_EXPORT_DIR, fileName).getAbsolutePath();
-            FileUtil.writeFile(filePath, new Gson().toJson(List.of(componentsList.get(position))));
+            FileUtil.writeFile(filePath, getGson().toJson(List.of(componentsList.get(position))));
             SketchwareUtil.toast(Helper.getResString(R.string.developer_tools_component_success_message_export, filePath));
             dialog.dismiss();
         });
@@ -254,6 +255,17 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            int backgroundResource;
+            if (components.size() == 1) {
+                backgroundResource = R.drawable.shape_alone;
+            } else if (position == 0) {
+                backgroundResource = R.drawable.shape_top;
+            } else if (position == components.size() - 1) {
+                backgroundResource = R.drawable.shape_bottom;
+            } else {
+                backgroundResource = R.drawable.shape_middle;
+            }
+            holder.itemView.setBackgroundResource(backgroundResource);
             holder.bind(components.get(position));
             if (holder.isCollapsed()) {
                 holder.optionLayout.setVisibility(View.GONE);
@@ -286,7 +298,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
         }
 
         public class ViewHolder extends CollapsibleViewHolder {
-            public final MaterialCardView root;
+            public final LinearLayout root;
             public final LinearLayout optionLayout;
             public final ImageView icon;
             public final TextView type;
@@ -296,7 +308,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView, 200);
-                root = (MaterialCardView) itemView;
+                root = (LinearLayout) itemView;
                 icon = itemView.findViewById(R.id.img_icon);
                 type = itemView.findViewById(R.id.tv_component_type);
                 description = itemView.findViewById(R.id.tv_component_description);

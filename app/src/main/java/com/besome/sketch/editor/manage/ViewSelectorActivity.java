@@ -18,6 +18,8 @@ import com.besome.sketch.editor.manage.view.AddViewActivity;
 import com.besome.sketch.editor.manage.view.PresetSettingActivity;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
+import com.google.android.material.color.MaterialColors;
+
 import java.util.ArrayList;
 
 import a.a.a.eC;
@@ -27,6 +29,7 @@ import a.a.a.mB;
 import a.a.a.rq;
 import a.a.a.wq;
 import a.a.a.xB;
+
 import pro.sketchware.R;
 import pro.sketchware.databinding.FileSelectorPopupSelectXmlActivityItemBinding;
 import pro.sketchware.databinding.FileSelectorPopupSelectXmlBinding;
@@ -99,7 +102,9 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                     activity.orientation = projectFile.orientation;
                     activity.options = projectFile.options;
                     if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-                        jC.b(sc_id).a(2, projectFile.getDrawerName());
+                        if (jC.b(sc_id).b(projectFile.getDrawerXmlName()) == null) {
+                            jC.b(sc_id).a(2, projectFile.getDrawerName());
+                        }
                     } else {
                         jC.b(sc_id).b(2, projectFile.getDrawerName());
                     }
@@ -196,16 +201,17 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                 }
             }
         });
+        var onSurface = MaterialColors.getColor(binding.optionsSelector, com.google.android.material.R.attr.colorOnSurface);
         binding.optionsSelector.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
                 if (checkedId == R.id.option_view) {
                     selectedTab = TAB_ACTIVITY;
-                    binding.optionView.setTextColor(R.attr.titleTextColor);
+                    binding.optionView.setTextColor(onSurface);
                     binding.optionCustomView.setTextColor(Color.parseColor("#FFFFFF"));
                 } else if (checkedId == R.id.option_custom_view) {
                     selectedTab = TAB_CUSTOM_VIEW;
                     binding.optionView.setTextColor(Color.parseColor("#FFFFFF"));
-                    binding.optionCustomView.setTextColor(R.attr.titleTextColor);
+                    binding.optionCustomView.setTextColor(onSurface);
                 }
                 viewSelectorAdapter.notifyDataSetChanged();
                 binding.emptyMessage.setVisibility(viewSelectorAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);

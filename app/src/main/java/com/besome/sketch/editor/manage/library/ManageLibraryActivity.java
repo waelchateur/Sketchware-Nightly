@@ -23,21 +23,18 @@ import com.besome.sketch.editor.manage.library.firebase.ManageFirebaseActivity;
 import com.besome.sketch.editor.manage.library.googlemap.ManageGoogleMapActivity;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
-import dev.aldi.sayuti.editor.manage.ManageLocalLibraryActivity;
-
-import mod.hey.studios.activity.managers.nativelib.ManageNativelibsActivity;
-
-import pro.sketchware.R;
-
 import java.lang.ref.WeakReference;
 
 import a.a.a.MA;
 import a.a.a.aB;
 import a.a.a.jC;
 import a.a.a.mB;
+import dev.aldi.sayuti.editor.manage.ManageLocalLibraryActivity;
+import mod.hey.studios.activity.managers.nativelib.ManageNativelibsActivity;
 import mod.hey.studios.util.Helper;
 import mod.jbk.editor.manage.library.ExcludeBuiltInLibrariesActivity;
 import mod.jbk.editor.manage.library.ExcludeBuiltInLibrariesLibraryItemView;
+import pro.sketchware.R;
 
 public class ManageLibraryActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
@@ -361,7 +358,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
 
     private void showFirebaseNeedCompatDialog() {
         aB dialog = new aB(this);
-        dialog.a(R.drawable.widget_firebase);
+        dialog.a(R.drawable.ic_mtrl_firebase);
         dialog.b(Helper.getResString(R.string.common_word_warning));
         dialog.a(Helper.getResString(R.string.design_library_firebase_message_need_compat));
         dialog.b(Helper.getResString(R.string.common_word_ok), Helper.getDialogDismissListener(dialog));

@@ -30,7 +30,6 @@ import a.a.a.Zx;
 import a.a.a.aB;
 import a.a.a.xB;
 import mod.hey.studios.code.SrcCodeEditor;
-import mod.hey.studios.code.SrcCodeEditorLegacy;
 import mod.hilal.saif.activities.tools.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.activities.coloreditor.adapters.ColorsAdapter;
@@ -46,7 +45,7 @@ public class ColorEditorActivity extends AppCompatActivity {
 
     private static final int MENU_SAVE = 0;
     private static final int MENU_OPEN_IN_EDITOR = 1;
-    private static String contentPath;
+    public static String contentPath;
     private final ArrayList<ColorItem> colorList = new ArrayList<>();
     private boolean isGoingToEditor;
     private ColorEditorActivityBinding binding;
@@ -64,7 +63,9 @@ public class ColorEditorActivity extends AppCompatActivity {
         if (colorValue.startsWith("#")) {
             return colorValue;
         }
-
+        if (colorValue.startsWith("?attr/")) {
+            return getColorValueFromXml(context, colorValue.substring(6), referencingLimit - 1);
+        }
         if (colorValue.startsWith("@color/")) {
             return getColorValueFromXml(context, colorValue.substring(7), referencingLimit - 1);
 
@@ -217,11 +218,7 @@ public class ColorEditorActivity extends AppCompatActivity {
         } else if (id == MENU_OPEN_IN_EDITOR) {
             XmlUtil.saveXml(contentPath, convertListToXml(colorList));
             Intent intent = new Intent();
-            if (ConfigActivity.isLegacyCeEnabled()) {
-                intent.setClass(getApplicationContext(), SrcCodeEditorLegacy.class);
-            } else {
-                intent.setClass(getApplicationContext(), SrcCodeEditor.class);
-            }
+            intent.setClass(getApplicationContext(), SrcCodeEditor.class);
             intent.putExtra("title", title);
             intent.putExtra("content", contentPath);
             intent.putExtra("xml", xmlPath);

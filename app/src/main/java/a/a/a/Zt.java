@@ -104,6 +104,10 @@ public class Zt extends qA {
         actBinding.layoutBtnGroup.animate().translationY(isSelecting ? 0F : 400F).setDuration(200L).start();
         actBinding.layoutBtnGroup.setVisibility(isSelecting ? View.VISIBLE : View.GONE);
 
+        if (!isSelecting) {
+            projectResourceBeans.forEach(bean -> bean.isSelected = false);
+        }
+
         adapter.notifyDataSetChanged();
     }
 
@@ -127,13 +131,17 @@ public class Zt extends qA {
     }
 
     public void processResources() {
-        if (projectResourceBeans == null || projectResourceBeans.isEmpty()) {
+        if (projectResourceBeans == null) {
             return;
         }
 
         for (ProjectResourceBean resourceBean : projectResourceBeans) {
             if (resourceBean.isNew) {
-                oB.c(getFilePath(resourceBean.resFullName));
+                try {
+                    importFont(resourceBean.resFullName, getResourceFilePath(resourceBean));
+                    oB.c(resourceBean.resFullName);
+                } catch (Exception ignored) {
+                }
             }
         }
 
@@ -155,19 +163,6 @@ public class Zt extends qA {
         jC.d(sc_id).y();
         jC.a(sc_id).a(jC.d(sc_id));
         jC.a(sc_id).k();
-
-        for (ProjectResourceBean resourceBean : projectResourceBeans) {
-            if (resourceBean.isNew) {
-                try {
-                    String filePath = getResourceFilePath(resourceBean);
-                    if (oB.e(filePath)) {
-                        oB.c(filePath);
-                    }
-                    importFont(resourceBean.resFullName, filePath);
-                } catch (Exception ignored) {
-                }
-            }
-        }
     }
 
     public final void toggleEmptyStateVisibility() {
