@@ -92,13 +92,12 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void initialize() {
-        activity = this;
 
+        activity = this;
         setSupportActionBar(binding.toolbar);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         binding.toolbar.setNavigationOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
         binding.paletteRecycler.setLayoutManager(new LinearLayoutManager(this));
         binding.paletteRecycler.setAdapter(new PaletteAdapter(pallet_listmap));
@@ -517,7 +516,6 @@ public class BlocksManager extends BaseAppCompatActivity {
 
     private boolean isItNearTrash(View draggedView, View trash) {
         if (draggedView == null) return false;
-
         int[] trashLocation = new int[2];
         trash.getLocationOnScreen(trashLocation);
 
@@ -528,7 +526,6 @@ public class BlocksManager extends BaseAppCompatActivity {
 
         return draggedY <= (trashLocation[1] + (draggedView.getMeasuredHeight() * 2) / 2) && draggedY >= ((trashLocation[1] - (draggedView.getMeasuredHeight() * 2) / 2));
     }
-
 
     public class PaletteAdapter extends RecyclerView.Adapter<PaletteAdapter.ViewHolder> {
 
