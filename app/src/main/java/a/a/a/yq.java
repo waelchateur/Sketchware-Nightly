@@ -14,7 +14,6 @@ import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.beans.ProjectLibraryBean;
 import com.besome.sketch.beans.SrcCodeBean;
 import com.besome.sketch.beans.ViewBean;
-import com.google.gson.Gson;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ import java.util.regex.Pattern;
 
 import mod.hey.studios.build.BuildSettings;
 import mod.hey.studios.project.ProjectSettings;
-import mod.hey.studios.util.Helper;
 import mod.hey.studios.util.ProjectFile;
 import mod.hilal.saif.blocks.CommandBlock;
 import mod.pranav.viewbinding.ViewBindingBuilder;
@@ -198,6 +196,11 @@ public class yq {
     public final String resDirectoryPath;
 
     /**
+     * Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/proguard-rules.pro
+     */
+    public final String proguardFilePath;
+
+    /**
      * Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/res/layout
      */
     public final String layoutFilesPath;
@@ -213,6 +216,8 @@ public class yq {
     public final String importedSoundsPath;
     
     private final Context context;
+
+    public boolean generateDataBindingClasses;
 
     public yq(Context context, String sc_id) {
         this(context, wq.d(sc_id), lC.b(sc_id));
@@ -251,6 +256,7 @@ public class yq {
         generatedFilesPath = projectMyscPath + "app" + File.separator + "src" + File.separator + "main";
         javaFilesPath = generatedFilesPath + File.separator + "java";
         resDirectoryPath = generatedFilesPath + File.separator + "res";
+        proguardFilePath = projectMyscPath + "app" + File.separator + "proguard-rules.pro";
         layoutFilesPath = resDirectoryPath + File.separator + "layout";
         importedSoundsPath = resDirectoryPath + File.separator + "raw";
         assetsPath = generatedFilesPath + File.separator + "assets";
@@ -864,7 +870,7 @@ public class yq {
     }
 
     private boolean isViewBindingEnable() {
-        return projectSettings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, ProjectSettings.SETTING_GENERIC_VALUE_FALSE).equals(ProjectSettings.SETTING_GENERIC_VALUE_TRUE);
+        return generateDataBindingClasses && projectSettings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, ProjectSettings.SETTING_GENERIC_VALUE_FALSE).equals(ProjectSettings.SETTING_GENERIC_VALUE_TRUE);
     }
 
     /**
