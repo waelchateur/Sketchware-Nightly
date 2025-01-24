@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 
-import a.a.a.XB;
 import a.a.a.Zx;
 import a.a.a.aB;
 import mod.hey.studios.util.Helper;
@@ -52,7 +51,7 @@ public class ColorsEditor extends Fragment {
     public final HashMap <String, String> defaultColors = new HashMap<>();
     private HashMap<Integer, String> notesMap = new HashMap<>();
 
-    public final ColorsEditorManager colorsEditorManager = new ColorsEditorManager();
+    public ColorsEditorManager colorsEditorManager;
 
     public ColorsEditor(ResourcesEditorActivity activity) {
         this.activity = activity;
@@ -111,7 +110,7 @@ public class ColorsEditor extends Fragment {
         }
 
         activity.runOnUiThread(() -> {
-            adapter = new ColorsAdapter(colorList, activity, notesMap);
+            adapter = new ColorsAdapter(colorsEditorManager, colorList, activity, notesMap);
             binding.recyclerView.setAdapter(adapter);
             activity.checkForInvalidResources();
             updateNoContentLayout();
@@ -138,6 +137,7 @@ public class ColorsEditor extends Fragment {
         defaultColors.put("colorControlHighlight", ProjectFile.COLOR_CONTROL_HIGHLIGHT);
         defaultColors.put("colorControlNormal", ProjectFile.COLOR_CONTROL_NORMAL);
 
+        colorsEditorManager = new ColorsEditorManager(binding.getRoot());
         colorsEditorManager.defaultColors = defaultColors;
     }
 

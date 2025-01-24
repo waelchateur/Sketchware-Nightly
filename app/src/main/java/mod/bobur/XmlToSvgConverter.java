@@ -153,7 +153,7 @@ public class XmlToSvgConverter {
     }
 
     private void handlePath(Element path, StringWriter svg) {
-        ColorsEditorManager colorsEditorManager = new ColorsEditorManager();
+        ColorsEditorManager colorsEditorManager = new ColorsEditorManager(view);
 
         String pathData = path.getAttribute("android:pathData");
         String fillColor = getVectorColor(path);
@@ -227,7 +227,7 @@ public class XmlToSvgConverter {
     }
 
     public String getVectorColor(Element vectorElement) {
-        ColorsEditorManager colorsEditorManager = new ColorsEditorManager();
+        ColorsEditorManager colorsEditorManager = new ColorsEditorManager(view);
 
         Element root = vectorElement.getOwnerDocument().getDocumentElement();
         String tint = root.getAttribute("android:tint");

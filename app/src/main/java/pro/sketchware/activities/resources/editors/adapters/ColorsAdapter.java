@@ -23,9 +23,10 @@ public class ColorsAdapter extends RecyclerView.Adapter<ColorsAdapter.ViewHolder
     private ArrayList<ColorModel> filteredData;
     private final HashMap<Integer, String> notesMap;
     private final ResourcesEditorActivity activity;
-    private final ColorsEditorManager colorsEditorManager = new ColorsEditorManager();
+    private final ColorsEditorManager colorsEditorManager;
 
-    public ColorsAdapter(ArrayList<ColorModel> filteredData, ResourcesEditorActivity activity, HashMap<Integer, String> notesMap) {
+    public ColorsAdapter(ColorsEditorManager colorsEditorManager, ArrayList<ColorModel> filteredData, ResourcesEditorActivity activity, HashMap<Integer, String> notesMap) {
+        this.colorsEditorManager = colorsEditorManager;
         this.originalData = new ArrayList<>(filteredData);
         this.filteredData = filteredData;
         this.activity = activity;

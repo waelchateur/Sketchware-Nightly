@@ -2,6 +2,8 @@ package pro.sketchware.activities.resources.editors.utils;
 
 import static com.besome.sketch.design.DesignActivity.sc_id;
 
+import android.view.View;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,7 +26,10 @@ public class AttributeSuggestions {
         BOOLEAN, DIMENSION, COLOR, TEXT, NUMBER, NUMBER_0_1, DRAWABLE, FONT
     }
 
-    public AttributeSuggestions() {
+    private final View view;
+
+    public AttributeSuggestions(View view) {
+        this.view = view;
 
         ATTRIBUTE_SUGGESTIONS.add("android:text");
         ATTRIBUTE_SUGGESTIONS.add("android:hint");
@@ -139,7 +144,7 @@ public class AttributeSuggestions {
 
         ArrayList<ColorModel> colorList = new ArrayList<>();
 
-        new ColorsEditorManager().parseColorsXML(colorList, FileUtil.readFileIfExist(filePath));
+        new ColorsEditorManager(view).parseColorsXML(colorList, FileUtil.readFileIfExist(filePath));
 
         return colorList.stream().map(colorModel -> "@color/" + colorModel.getColorName()).collect(Collectors.toList());
 

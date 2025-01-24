@@ -53,7 +53,6 @@ public class StylesEditor extends Fragment {
     private HashMap<Integer, String> notesMap = new HashMap<>();
 
     public final StylesEditorManager stylesEditorManager = new StylesEditorManager();
-    private final AttributeSuggestions attributeSuggestions = new AttributeSuggestions();
 
     public boolean hasUnsavedChanges;
     private String filePath;
@@ -301,6 +300,7 @@ public class StylesEditor extends Fragment {
     }
 
     private void setupAutoComplete(MaterialAutoCompleteTextView attrView, MaterialAutoCompleteTextView valueView) {
+       AttributeSuggestions attributeSuggestions = new AttributeSuggestions(binding.getRoot());
         String[] attributes = attributeSuggestions.ATTRIBUTE_SUGGESTIONS.toArray(new String[0]);
 
         ArrayAdapter<String> attrAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_dropdown_item_1line, attributes);

@@ -5,9 +5,6 @@ import static mod.hey.studios.util.ProjectFile.getDefaultColor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 
 import androidx.core.content.ContextCompat;
@@ -50,7 +47,11 @@ public class ColorsEditorManager {
     public HashMap<String, String> defaultColors;
     public HashMap<Integer, String> notesMap = new HashMap<>();
 
-    private final View view = null;
+    private final View view;
+
+    public ColorsEditorManager(View view) {
+        this.view = view;
+    }
 
     public String getColorValue(Context context, String colorValue, int referencingLimit) {
         if (colorValue == null || referencingLimit <= 0) {
@@ -73,20 +74,13 @@ public class ColorsEditorManager {
     }
 
     public String getColorValueFromAttrs(Context context, String attrName, int referencingLimit) {
-        String TAG = "ABCD";
         try {
             int attrId = context.getResources().getIdentifier(attrName, "attr", context.getPackageName());
-            Log.d(TAG, "Attribute ID for " + attrName + ": " + attrId);
 
             if (attrId != 0 && referencingLimit > 0) {
-                String hexColor = String.format("#%06X", (0xFFFFFF & ThemeUtils.getColor(view, attrId)));
-                Log.e(TAG, "collected : " + hexColor);
-                return hexColor;
+                return String.format("#%06X", (0xFFFFFF & ThemeUtils.getColor(view, attrId)));
             }
-        } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Resource not found: " + attrName, e);
-        } catch (Exception e) {
-            Log.e(TAG, "Error retrieving color value for attribute: " + attrName, e);
+        } catch (Exception ignored) {
         }
         return defaultHexColor;
     }
