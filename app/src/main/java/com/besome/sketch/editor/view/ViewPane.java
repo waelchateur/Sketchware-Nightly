@@ -458,7 +458,8 @@ public class ViewPane extends RelativeLayout {
                             ((ImageView) view).setImageBitmap(Bitmap.createScaledBitmap(decodeFile3, decodeFile3.getWidth() * round3, decodeFile3.getHeight() * round3, true));
                         }
                     } else {
-                        XmlToSvgConverter.setImageVectorFromFile(((ImageView) view), XmlToSvgConverter.getVectorFullPath(DesignActivity.sc_id, viewBean.image.resName));
+                        XmlToSvgConverter xmlToSvgConverter = new XmlToSvgConverter(rootLayout);
+                        xmlToSvgConverter.setImageVectorFromFile(((ImageView) view), xmlToSvgConverter.getVectorFullPath(DesignActivity.sc_id, viewBean.image.resName));
                     }
                 } catch (Exception unused2) {
                     ((ImageView) view).setImageResource(R.drawable.default_image);
