@@ -178,6 +178,12 @@ public class ColorsEditor extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+                String value = s.toString();
+                if (value.startsWith("#") && !PropertiesUtil.isHexColor(value)) {
+                    dialogBinding.colorValueInputLayout.setError("Invalid HEX color");
+                    return;
+                }
+                dialogBinding.colorValueInput.setError(null);
                 dialogBinding.colorPreview.setBackgroundColor(PropertiesUtil.parseColor(colorsEditorManager.getColorValue(activity.getApplicationContext(), s.toString(), 3)));
             }
         });
