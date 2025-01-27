@@ -215,9 +215,9 @@ public class ColorsEditor extends Fragment {
 
             if (value.startsWith("#")) {
                 if (!PropertiesUtil.isHexColor(value)) {
-                    SketchwareUtil.toast("Please enter a valid HEX color", Toast.LENGTH_SHORT);
+                    SketchwareUtil.toast("Please enter a valid HEX color");
+                    return;
                 }
-                return;
             }
 
             if (colorModel != null) {
