@@ -23,7 +23,7 @@ public class BuiltInLibraries {
 
     // None final so that field values won't be optimized into code, and to allow easy changing of library names due to that
 
-    public static String ANDROIDX_ACTIVITY = "activity-1.6.1";
+    public static String ANDROIDX_ACTIVITY = "activity-1.8.2";
     public static String ANDROIDX_ANNOTATION = "annotation-1.3.0";
     public static String ANDROIDX_ANNOTATION_EXPERIMENTAL = "annotation-experimental-1.3.0";
     public static String ANDROIDX_APPCOMPAT = "appcompat-1.6.1";
