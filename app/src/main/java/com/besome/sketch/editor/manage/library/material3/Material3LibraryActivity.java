@@ -6,16 +6,18 @@ import android.widget.CompoundButton;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.besome.sketch.lib.base.BaseAppCompatActivity;
+
 import mod.hey.studios.util.Helper;
 import pro.sketchware.databinding.ManageLibraryMaterial3Binding;
 
-public class Material3LibraryActivity extends AppCompatActivity {
+public class Material3LibraryActivity extends BaseAppCompatActivity {
 
     private ManageLibraryMaterial3Binding binding;
     private Material3LibraryManager material3LibraryManager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ManageLibraryMaterial3Binding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

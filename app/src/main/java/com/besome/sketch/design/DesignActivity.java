@@ -1018,7 +1018,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
      */
     void toLayoutHierarchySheet() {
         var projectDataManager = jC.a(sc_id);
-        var fileName = projectFileSelector.getFileName();
+        var fileName = projectFile.getXmlName();
         var viewBeans = projectDataManager.d(fileName);
         var hierarchySheet = new LayoutHierarchySheet(this, viewBeans);
         hierarchySheet.show();
