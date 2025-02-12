@@ -207,12 +207,12 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
         dialog.setOnShowListener(dialogInterface -> {
             Button positiveButton = ((androidx.appcompat.app.AlertDialog) dialogInterface).getButton(DialogInterface.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(view -> {
-                if (inputText.getText().toString().isEmpty()) {
+                if (Helper.getText(inputText).isEmpty()) {
                     SketchwareUtil.toastError("Invalid name");
                     return;
                 }
 
-                String name = inputText.getText().toString();
+                String name = Helper.getText(inputText);
                 String path;
                 if (isFolder) {
                     path = fpu.getPathResource(numProj) + "/" + name;
@@ -281,8 +281,8 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
                 .setView(dialogBinding.getRoot())
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
                 .setPositiveButton("Rename", (dialogInterface, i) -> {
-                    if (!inputText.getText().toString().isEmpty()) {
-                        if (FileUtil.renameFile(path, path.substring(0, path.lastIndexOf("/")) + "/" + inputText.getText().toString())) {
+                    if (!Helper.getText(inputText).isEmpty()) {
+                        if (FileUtil.renameFile(path, path.substring(0, path.lastIndexOf("/")) + "/" + Helper.getText(inputText))) {
                             SketchwareUtil.toast("Renamed successfully");
                         } else {
                             SketchwareUtil.toastError("Renaming failed");
