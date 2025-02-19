@@ -92,17 +92,21 @@ android {
         viewBinding true
         buildConfig true
     }
+}
 
-    configurations.all {
-        resolutionStrategy.eachDependency { details ->
-            if (details.requested.group == "org.eclipse.jdt" && details.requested.name == "ecj") {
-                details.useVersion "3.26.0"
-            }
-            if (details.requested.group == "commons-logging" && details.requested.name == "commons-logging") {
-                details.useVersion "1.2"
-            }
+configurations.all {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == "org.eclipse.jdt" && details.requested.name == "ecj") {
+            details.useVersion "3.26.0"
+        }
+        if (details.requested.group == "commons-logging" && details.requested.name == "commons-logging") {
+            details.useVersion "1.2"
         }
     }
+}
+
+configurations.minApi26Implementation {
+    exclude group: 'javax.inject', module: 'javax.inject'
 }
 
 dependencies {
@@ -165,7 +169,7 @@ dependencies {
     minApi26Implementation "org.eclipse.jdt:ecj:3.26.0"
 
     minApi26Implementation "com.github.Cosmic-IDE:kotlinc-android:f49c67a8c0"
-
+    
     implementation "com.github.topjohnwu.libsu:core:5.0.4"
     implementation "dev.chrisbanes.insetter:insetter:0.6.1"
 
@@ -173,6 +177,7 @@ dependencies {
     if (analyticsEnabled) {
         new File("$projectDir/google-services.json").text = secrets
     }
+    
     implementation platform("com.google.firebase:firebase-bom:33.6.0")
     implementation "com.google.firebase:firebase-crashlytics"
     implementation "com.google.firebase:firebase-analytics"
