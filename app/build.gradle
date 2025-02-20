@@ -110,10 +110,7 @@ android {
 
 
     configurations.minApi26Implementation {
-        exclude(group = "javax.inject", module = "javax.inject")
-        exclude(group = "org.jetbrains", module = "annotations-java5")
-        exclude(group = "com.google.j2objc", module = "j2objc-annotations")
-        exclude(group = "com.google.errorprone", module = "error_prone_annotations")
+        exclude group: 'javax.inject', module: 'javax.inject'
     }
 }
 
