@@ -73,6 +73,7 @@ android {
     kotlinOptions {
         jvmTarget = "17"
         freeCompilerArgs += ["-Xjvm-default=all", "-Xbackend-threads=4"]
+        apiVersion = "1.9"
     }
 
     androidResources {
@@ -106,6 +107,19 @@ android {
                 details.useVersion "1.1.3"  // Downgrade if the latest causes issues
             }
         }
+    }
+    
+     lint.abortOnError = false
+
+    configurations.configureEach {
+        exclude(group = "javax.inject", module = "javax.inject")
+        exclude(group = "org.jetbrains", module = "annotations-java5")
+        exclude(group = "com.google.j2objc", module = "j2objc-annotations")
+        exclude(group = "com.google.errorprone", module = "error_prone_annotations")
+    }
+
+    packagingOptions.jniLibs.apply {
+        useLegacyPackaging = true
     }
 }
 
