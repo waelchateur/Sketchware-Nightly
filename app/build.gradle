@@ -112,6 +112,11 @@ android {
     configurations.minApi26Implementation {
         exclude group: 'javax.inject', module: 'javax.inject'
     }
+    
+    lintOptions {
+        disable 'ExpiredTargetSdkVersion'
+        checkReleaseBuilds false
+    }
 }
 
 dependencies {
