@@ -67,6 +67,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      - name: Clean Project
+        run: gradle clean
+
       - name: Build Release APK
         env:
           SKETCHUB_API_KEY: ${{ secrets.SKETCHUB_API_KEY }}
@@ -162,4 +165,3 @@ jobs:
           git commit -m "feat: Update app about screen data"
           git push
         continue-on-error: true
-      
