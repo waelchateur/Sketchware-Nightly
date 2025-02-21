@@ -66,9 +66,12 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-
+        
       - name: Clean Project
-        run: gradle clean
+        run: |
+          gradle --stop
+          rm -rf ~/.gradle/caches
+          gradle clean
 
       - name: Refresh Dependencies
         run: gradle build --refresh-dependencies
