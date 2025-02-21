@@ -67,8 +67,14 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      - name: Check Dependencies
+        run: gradle dependencies --configuration=runtimeClasspath
+
       - name: Clean Project
         run: gradle clean
+
+      - name: Refresh Dependencies
+        run: gradle build --refresh-dependencies
 
       - name: Build Release APK
         env:
