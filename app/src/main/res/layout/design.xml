@@ -98,59 +98,66 @@
                         app:trackStopIndicatorSize="0dp"/>
                 </LinearLayout>
 
-                <com.google.android.material.bottomappbar.BottomAppBar
-                    android:id="@+id/bottom_app_bar"
-                    style="@style/Widget.Material3.BottomAppBar.Legacy"
+                <!-- Wrap BottomAppBar inside CoordinatorLayout -->
+                <androidx.coordinatorlayout.widget.CoordinatorLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    app:menu="@menu/design_bottom_menu"
-                    app:paddingLeftSystemWindowInsets="false"
-                    app:paddingBottomSystemWindowInsets="false">
+                    android:layout_height="wrap_content">
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/file_name_container"
-                        style="?attr/materialCardViewStyle"
+                    <com.google.android.material.bottomappbar.BottomAppBar
+                        android:id="@+id/bottom_app_bar"
+                        style="@style/Widget.Material3.BottomAppBar.Legacy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="8dp"
-                        android:clickable="true"
-                        app:contentPadding="12dp"
-                        app:strokeWidth="0dp">
+                        android:gravity="center_vertical"
+                        app:menu="@menu/design_bottom_menu"
+                        app:paddingLeftSystemWindowInsets="false"
+                        app:paddingBottomSystemWindowInsets="false">
 
-                        <LinearLayout
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/file_name_container"
+                            style="?attr/materialCardViewStyle"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical">
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="8dp"
+                            android:clickable="true"
+                            app:contentPadding="12dp"
+                            app:strokeWidth="0dp">
 
-                            <ImageView
-                                android:id="@+id/img_orientation"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_marginHorizontal="6dp"
-                                android:src="@drawable/ic_mtrl_screen"
-                                app:tint="?attr/colorControlNormal" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical">
 
-                            <TextView
-                                android:id="@+id/file_name"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginHorizontal="5dp"
-                                android:singleLine="true"
-                                android:text="main"
-                                android:textAppearance="?attr/textAppearanceBodyMedium" />
+                                <ImageView
+                                    android:id="@+id/img_orientation"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginHorizontal="6dp"
+                                    android:src="@drawable/ic_mtrl_screen"
+                                    app:tint="?attr/colorControlNormal" />
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_marginEnd="8dp"
-                                android:src="@drawable/ic_arrow_drop_down_24px"
-                                app:tint="?attr/colorControlNormal" />
+                                <TextView
+                                    android:id="@+id/file_name"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginHorizontal="5dp"
+                                    android:singleLine="true"
+                                    android:text="main"
+                                    android:textAppearance="?attr/textAppearanceBodyMedium" />
 
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-                </com.google.android.material.bottomappbar.BottomAppBar>
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:src="@drawable/ic_arrow_drop_down_24px"
+                                    app:tint="?attr/colorControlNormal" />
+
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </com.google.android.material.bottomappbar.BottomAppBar>
+                </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
             </LinearLayout>
 
             <com.besome.sketch.editor.view.ViewProperty
