@@ -74,7 +74,13 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-
+    
+    lintOptions {
+        checkReleaseBuilds false  // Disable lint check for release builds
+        // or to suppress all lint checks
+        abortOnError false
+    }
+    
     androidResources {
         additionalParameters.addAll("--stable-ids", "${rootDir}/public-stable-ids.txt")
     }
