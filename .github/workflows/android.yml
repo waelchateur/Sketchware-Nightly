@@ -17,30 +17,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  notifyTelegram:
-    name: Notify Telegram
-    runs-on: ${{ vars.IS_USING_HOSTED_RUNNERS == 'true' && 'self-hosted' || 'ubuntu-latest' }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install Dependencies
-        run: |
-          pip install requests
-
-      - name: Send a message to Telegram
-        env:
-          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TOPIC_ID: ${{ secrets.TELEGRAM_TOPIC_ID }}
-        run: |
-          python ./.github/workflows/notify_telegram.py
-        continue-on-error: true
-
   build:
     name: Build APKs
     runs-on: ${{ vars.IS_USING_HOSTED_RUNNERS == 'true' && 'self-hosted' || 'ubuntu-latest' }}
@@ -60,18 +36,20 @@ jobs:
         shell: bash
         env:
           JSON_CONTENT: ${{ secrets.GOOGLE_SERVICES_JSON }}
-        if: ${{ env.JSON_CONTENT != '' }}
+        if: "${{ env.JSON_CONTENT != '' }}"
         run: |
           printf 'GOOGLE_SERVICES_JSON<<EOF\n%s\nEOF\n' "$JSON_CONTENT" >> $GITHUB_ENV
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-        
+        with:
+          cache-read-only: false
+          cache-cleanup: always
+
       - name: Clean Project
         run: |
           gradle --stop
-          rm -rf ~/.gradle/caches
-          gradle clean
+          gradle cleanBuildCache
 
       - name: Refresh Dependencies
         run: gradle build --refresh-dependencies
@@ -112,8 +90,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install Dependencies
-        run: |
-          pip install telethon
+        run: pip install telethon
 
       - name: Get Git Commit Info
         run: |
@@ -137,7 +114,7 @@ jobs:
           APK_MIN_API21: ./downloaded-artifact/minApi21/app-minApi21-release.apk
           APK_MIN_API26: ./downloaded-artifact/minApi26/app-minApi26-release.apk
         run: |
-          python ./.github/workflows/deploy_artifacts.py
+          [ -f "$APK_MIN_API21" ] && [ -f "$APK_MIN_API26" ] && python ./.github/workflows/deploy_artifacts.py
         continue-on-error: true
 
   updateAppData:
@@ -154,8 +131,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install Dependencies
-        run: |
-          pip install requests
+        run: pip install requests
 
       - name: Run Update App Script
         run: python .github/workflows/update_app_data.py
@@ -168,6 +144,6 @@ jobs:
           git config --global user.name "Sketchware Pro Actions"
           git config --global user.email "hello@sketchware.pro"
           git add about.json
-          git commit -m "feat: Update app about screen data"
+          git diff --cached --quiet || git commit -m "feat: Update app about screen data"
           git push
         continue-on-error: true
