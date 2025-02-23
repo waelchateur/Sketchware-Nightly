@@ -23,7 +23,9 @@ android {
         targetSdkVersion 28
         versionCode 150
         versionName "v7.0.0-SNAPSHOT-" + shortCommitHash
-
+        // Enable multidex support
+        multiDexEnabled true
+        
         buildConfigField("String", "GIT_HASH", "\"${gitCommitHash}\"")
 
         buildConfigField("String", "FLAVOR_NAME_WITH_AABS", "\"minApi26\"")
@@ -99,7 +101,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"], exclude: "proguard-base-7.2.2.jar")
-
+    // Multidex support
+    implementation "androidx.multidex:multidex:2.0.1"
     implementation "androidx.appcompat:appcompat:1.7.0"
     implementation "androidx.core:core-splashscreen:1.0.1"
     implementation "androidx.activity:activity:1.10.0"
