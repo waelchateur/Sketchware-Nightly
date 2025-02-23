@@ -31,7 +31,7 @@ public class AddCustomViewActivity extends BaseDialogActivity implements View.On
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);  // Ensure this is the first line
         setContentView(R.layout.manage_screen_custom_view_add);
         e(Helper.getResString(R.string.design_manager_view_title_add_custom_view));
         f(R.drawable.ic_mtrl_add);
