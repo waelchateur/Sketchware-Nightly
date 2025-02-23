@@ -15,6 +15,7 @@ import java.io.File
  *
  * A huge thank you to [tyron][https://github.com/tyron12233] for porting `kotlinc` to Android.
  */
+ 
 class KotlinCompiler(
     private val builder: ProjectBuilder
 ) {
@@ -57,6 +58,8 @@ class KotlinCompiler(
             noJdk = true
             noReflect = true
             noStdlib = true
+            // greatly improves build performance
+            useFastJarFileSystem = true
 
             kotlinHome = mKotlinHome.absolutePath
             destination = mClassOutput.absolutePath
