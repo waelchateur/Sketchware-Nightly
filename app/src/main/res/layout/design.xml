@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,8 +8,7 @@
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/container"
@@ -51,11 +50,10 @@
                     app:shapeAppearance="?attr/shapeAppearanceCornerLarge"
                     app:strokeWidth="0dp">
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tab_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tab_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.divider.MaterialDivider
@@ -63,17 +61,11 @@
                     android:layout_height="wrap_content"
                     app:dividerThickness="0.5dp" />
 
-                <androidx.coordinatorlayout.widget.CoordinatorLayout
-                    android:id="@+id/layout_coordinator"
+                <com.besome.sketch.lib.ui.CustomViewPager
+                    android:id="@+id/viewpager"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1">
-
-                    <com.besome.sketch.lib.ui.CustomViewPager
-                        android:id="@+id/viewpager"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    android:layout_weight="1" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
@@ -175,4 +167,5 @@
             android:layout_height="match_parent"
             android:layout_gravity="end" />
     </androidx.drawerlayout.widget.DrawerLayout>
-</LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
