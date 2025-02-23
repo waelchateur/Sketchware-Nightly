@@ -44,11 +44,13 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           cache-read-only: false
-          cache-cleanup: always
+          gradle-home-cache-cleanup: true
 
       - name: Clean Project
         run: |
           gradle --stop
+          rm -f  ~/.gradle/caches/modules-2/modules-2.lock
+          rm -fr ~/.gradle/caches/*/plugin-resolution/
           rm -rf ~/.gradle/caches
           rm -rf ~/.gradle/wrapper
           rm -rf ~/.gradle/jdks
