@@ -41,6 +41,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
         this.build = build;
         this.ea = ea;
     }
+
     /**
      * The build number.
      * Corresponds to a number prefixed by the "plus" sign in 9+ format (9.0.1+<b>7</b>) / by "-b" string in 1.x format (1.8.0_60-b<b>12</b>).

@@ -1,11 +1,9 @@
 /*
- * Copyright 2010-2023 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2021 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
-
 package org.jetbrains.kotlin.cli.jvm.compiler.jarfs
 
-import com.intellij.openapi.editor.Document.EMPTY_ARRAY
 import com.intellij.openapi.util.io.BufferExposingByteArrayInputStream
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VirtualFile
@@ -81,11 +79,7 @@ internal class FastJarVirtualFile(
     }
 
     @Throws(IOException::class)
-    override fun getOutputStream(
-        requestor: Any,
-        newModificationStamp: Long,
-        newTimeStamp: Long
-    ): OutputStream {
+    override fun getOutputStream(requestor: Any, newModificationStamp: Long, newTimeStamp: Long): OutputStream {
         throw UnsupportedOperationException("JarFileSystem is read-only")
     }
 
