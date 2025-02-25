@@ -19,5 +19,8 @@ interface Icon {
 
     fun getIconWidth(): Int
 
-    fun paintIcon(component: Component, graphics: Graphics)
+    fun paintIcon(
+        component: Component,
+        graphics: Graphics,
+    )
 }

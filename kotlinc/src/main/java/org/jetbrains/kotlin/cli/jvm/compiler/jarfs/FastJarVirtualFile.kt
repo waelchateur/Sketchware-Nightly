@@ -19,7 +19,6 @@ internal class FastJarVirtualFile(
     private val parent: FastJarVirtualFile?,
     private val entryDescription: ZipEntryDescription?,
 ) : VirtualFile() {
-
     private var myChildrenArray = EMPTY_ARRAY
     private val myChildrenList: MutableList<VirtualFile> = mutableListOf()
 
@@ -79,7 +78,11 @@ internal class FastJarVirtualFile(
     }
 
     @Throws(IOException::class)
-    override fun getOutputStream(requestor: Any, newModificationStamp: Long, newTimeStamp: Long): OutputStream {
+    override fun getOutputStream(
+        requestor: Any,
+        newModificationStamp: Long,
+        newTimeStamp: Long,
+    ): OutputStream {
         throw UnsupportedOperationException("JarFileSystem is read-only")
     }
 
@@ -93,7 +96,11 @@ internal class FastJarVirtualFile(
 
     override fun getLength(): Long = length.toLong()
 
-    override fun refresh(asynchronous: Boolean, recursive: Boolean, postRunnable: Runnable?) {}
+    override fun refresh(
+        asynchronous: Boolean,
+        recursive: Boolean,
+        postRunnable: Runnable?,
+    ) {}
 
     @Throws(IOException::class)
     override fun getInputStream(): InputStream {

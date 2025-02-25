@@ -37,7 +37,10 @@ class FastJarFileSystem private constructor(internal val unmapBuffer: MappedByte
                 fileAccessor.second.unmapBuffer()
             }
 
-            override fun isEqual(val1: File, val2: File): Boolean {
+            override fun isEqual(
+                val1: File,
+                val2: File,
+            ): Boolean {
                 return val1 == val2 // reference equality to handle different jars for different ZipHandlers on the same path
             }
         }
@@ -52,6 +55,7 @@ class FastJarFileSystem private constructor(internal val unmapBuffer: MappedByte
     }
 
     override fun refresh(asynchronous: Boolean) {}
+
     override fun refreshAndFindFileByPath(path: String): VirtualFile? {
         return findFileByPath(path)
     }
@@ -81,7 +85,6 @@ class FastJarFileSystem private constructor(internal val unmapBuffer: MappedByte
     }
 }
 
-
 // private val IS_PRIOR_9_JRE = System.getProperty("java.specification.version", "").startsWith("1.")
 
 private fun prepareCleanerCallback(): ((ByteBuffer) -> Unit)? {
@@ -97,7 +100,7 @@ private fun prepareCleanerCallback(): ((ByteBuffer) -> Unit)? {
 
         val clean = Class.forName("sun.misc.Cleaner").getMethod("clean")
         clean.isAccessible = true
-
+        
         { buffer: ByteBuffer -> clean.invoke(cleaner.invoke(buffer)) }
 //        } else {
 //            val unsafeClass = try {

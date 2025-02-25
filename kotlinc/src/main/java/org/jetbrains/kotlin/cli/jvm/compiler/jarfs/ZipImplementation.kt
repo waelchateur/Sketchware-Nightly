@@ -10,7 +10,6 @@ import java.nio.ByteOrder
 import java.nio.MappedByteBuffer
 import java.util.zip.Inflater
 
-
 class ZipEntryDescription(
     val relativePath: CharSequence,
     val compressedSize: Int,
@@ -19,9 +18,9 @@ class ZipEntryDescription(
     val compressionKind: CompressionKind,
     val fileNameSize: Int,
 ) {
-
     enum class CompressionKind {
-        PLAIN, DEFLATE
+        PLAIN,
+        DEFLATE,
     }
 
     val isDirectory get() = uncompressedSize == 0
@@ -32,15 +31,13 @@ private const val END_OF_CENTRAL_DIR_ZIP64_SIZE = 56
 private const val LOCAL_FILE_HEADER_EXTRA_OFFSET = 28
 private const val LOCAL_FILE_HEADER_SIZE = LOCAL_FILE_HEADER_EXTRA_OFFSET + 2
 
-fun MappedByteBuffer.contentsToByteArray(
-    zipEntryDescription: ZipEntryDescription
-): ByteArray {
+fun MappedByteBuffer.contentsToByteArray(zipEntryDescription: ZipEntryDescription): ByteArray {
     order(ByteOrder.LITTLE_ENDIAN)
     val extraSize =
         getUnsignedShort(zipEntryDescription.offsetInFile + LOCAL_FILE_HEADER_EXTRA_OFFSET)
 
     position(
-        zipEntryDescription.offsetInFile + LOCAL_FILE_HEADER_SIZE + zipEntryDescription.fileNameSize + extraSize
+        zipEntryDescription.offsetInFile + LOCAL_FILE_HEADER_SIZE + zipEntryDescription.fileNameSize + extraSize,
     )
     val compressed = ByteArray(zipEntryDescription.compressedSize + 1)
     get(compressed, 0, zipEntryDescription.compressedSize)
@@ -95,10 +92,11 @@ fun MappedByteBuffer.parseCentralDirectory(): List<ZipEntryDescription> {
         get(bytesForName)
 
         val name =
-            if (bytesForName.all { it >= 0 })
+            if (bytesForName.all { it >= 0 }) {
                 ByteArrayCharSequence(bytesForName)
-            else
+            } else {
                 String(bytesForName, Charsets.UTF_8)
+            }
 
         currentOffset += 46 + fileNameLength + extraLength + fileCommentLength
 
@@ -109,16 +107,18 @@ fun MappedByteBuffer.parseCentralDirectory(): List<ZipEntryDescription> {
             "Unexpected versionNeededToExtract ($versionNeededToExtract) at $name"
         }
 
-        val compressionKind = when (compressionMethod) {
-            0 -> ZipEntryDescription.CompressionKind.PLAIN
-            8 -> ZipEntryDescription.CompressionKind.DEFLATE
-            else -> error("Unexpected compression method ($compressionMethod) at $name")
-        }
+        val compressionKind =
+            when (compressionMethod) {
+                0 -> ZipEntryDescription.CompressionKind.PLAIN
+                8 -> ZipEntryDescription.CompressionKind.DEFLATE
+                else -> error("Unexpected compression method ($compressionMethod) at $name")
+            }
 
-        result += ZipEntryDescription(
-            name, compressedSize, uncompressedSize, offsetOfFileData, compressionKind,
-            fileNameLength
-        )
+        result +=
+            ZipEntryDescription(
+                name, compressedSize, uncompressedSize, offsetOfFileData, compressionKind,
+                fileNameLength,
+            )
     }
 
     return result

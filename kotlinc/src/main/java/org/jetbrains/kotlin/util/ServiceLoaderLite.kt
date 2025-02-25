@@ -33,21 +33,23 @@ object ServiceLoaderLite {
      */
     fun <Service> loadImplementations(
         service: Class<out Service>,
-        classLoader: URLClassLoader
+        classLoader: URLClassLoader,
     ): List<Service> {
-        val files = classLoader.urLs.map { url ->
-            try {
-                Paths.get(url.toURI()).toFile()
-            } catch (e: FileSystemNotFoundException) {
-                throw IllegalArgumentException("Only local URLs are supported, got ${url.protocol}")
-            } catch (e: UnsupportedOperationException) {
-                throw IllegalArgumentException("Only local URLs are supported, got ${url.protocol}")
+        val files =
+            classLoader.urLs.map { url ->
+                try {
+                    Paths.get(url.toURI()).toFile()
+                } catch (e: FileSystemNotFoundException) {
+                    throw IllegalArgumentException("Only local URLs are supported, got ${url.protocol}")
+                } catch (e: UnsupportedOperationException) {
+                    throw IllegalArgumentException("Only local URLs are supported, got ${url.protocol}")
+                }
             }
-        }
 
-        val classpath = classLoader.urLs.joinToString(separator = File.pathSeparator) {
-            it.path
-        }
+        val classpath =
+            classLoader.urLs.joinToString(separator = File.pathSeparator) {
+                it.path
+            }
         val loader = PathClassLoader(classpath, this::class.java.classLoader)
         return loadImplementations(service, files, loader)
     }
@@ -55,14 +57,15 @@ object ServiceLoaderLite {
     fun <Service> loadImplementations(
         service: Class<out Service>,
         files: List<File>,
-        classLoader: ClassLoader
+        classLoader: ClassLoader,
     ): MutableList<Service> {
         val implementations = mutableListOf<Service>()
 
         for (className in findImplementations(service, files)) {
             try {
-                val instance = classLoader.loadClass(className).getConstructor()
-                    .newInstance()
+                val instance =
+                    classLoader.loadClass(className).getConstructor()
+                        .newInstance()
                 implementations.add(service.cast(instance)!!)
             } catch (e: ClassNotFoundException) {
                 throw ClassNotFoundException("Unable to find class $className in $files")
@@ -80,27 +83,38 @@ object ServiceLoaderLite {
         return loadImplementations(Service::class.java, classLoader)
     }
 
-    fun findImplementations(service: Class<*>, files: List<File>): Set<String> {
+    fun findImplementations(
+        service: Class<*>,
+        files: List<File>,
+    ): Set<String> {
         return files.flatMapTo(linkedSetOf()) { findImplementations(service, it) }
     }
 
-    private fun findImplementations(service: Class<*>, file: File): Set<String> {
+    private fun findImplementations(
+        service: Class<*>,
+        file: File,
+    ): Set<String> {
         val classIdentifier = getClassIdentifier(service)
 
         return when {
             file.isDirectory -> findImplementationsInDirectory(classIdentifier, file)
-            file.isFile && file.extension.lowercase(Locale.getDefault()) == "jar" -> findImplementationsInJar(
-                classIdentifier,
-                file
-            )
+            file.isFile && file.extension.lowercase(Locale.getDefault()) == "jar" ->
+                findImplementationsInJar(
+                    classIdentifier,
+                    file,
+                )
 
             else -> emptySet()
         }
     }
 
-    private fun findImplementationsInDirectory(classId: String, file: File): Set<String> {
-        val serviceFile = File(file, SERVICE_DIRECTORY_LOCATION + classId).takeIf { it.isFile }
-            ?: return emptySet()
+    private fun findImplementationsInDirectory(
+        classId: String,
+        file: File,
+    ): Set<String> {
+        val serviceFile =
+            File(file, SERVICE_DIRECTORY_LOCATION + classId).takeIf { it.isFile }
+                ?: return emptySet()
 
         try {
             return serviceFile.useLines { parseLines(file, it) }
@@ -109,7 +123,10 @@ object ServiceLoaderLite {
         }
     }
 
-    private fun findImplementationsInJar(classId: String, file: File): Set<String> {
+    private fun findImplementationsInJar(
+        classId: String,
+        file: File,
+    ): Set<String> {
         ZipFile(file).use { zipFile ->
             val entry = zipFile.getEntry(SERVICE_DIRECTORY_LOCATION + classId) ?: return emptySet()
             zipFile.getInputStream(entry).use { inputStream ->
@@ -118,11 +135,17 @@ object ServiceLoaderLite {
         }
     }
 
-    private fun parseLines(file: File, lines: Sequence<String>): Set<String> {
+    private fun parseLines(
+        file: File,
+        lines: Sequence<String>,
+    ): Set<String> {
         return lines.mapNotNullTo(linkedSetOf()) { parseLine(file, it) }
     }
 
-    private fun parseLine(file: File, line: String): String? {
+    private fun parseLine(
+        file: File,
+        line: String,
+    ): String? {
         val actualLine = line.substringBefore('#').trim().takeIf { it.isNotEmpty() } ?: return null
 
         actualLine.forEachIndexed { index: Int, c: Char ->

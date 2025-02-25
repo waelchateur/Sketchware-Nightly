@@ -20,9 +20,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import org.jetbrains.kotlin.cli.common.CLIConfigurationKeys
 import org.jetbrains.kotlin.cli.common.config.ContentRoot
 import org.jetbrains.kotlin.cli.common.config.KotlinSourceRoot
-import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
-import org.jetbrains.kotlin.cli.jvm.compiler.report
-import org.jetbrains.kotlin.cli.jvm.modules.CoreJrtFileSystem
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.JVMConfigurationKeys
 import org.jetbrains.kotlin.utils.PathUtil
@@ -70,23 +67,30 @@ val CompilerConfiguration.jvmModularRoots: List<File>
     get() = getList(CLIConfigurationKeys.CONTENT_ROOTS).filterIsInstance<JvmModulePathRoot>().map(JvmContentRoot::file)
 
 @JvmOverloads
-fun CompilerConfiguration.addJavaSourceRoot(file: File, packagePrefix: String? = null) {
+fun CompilerConfiguration.addJavaSourceRoot(
+    file: File,
+    packagePrefix: String? = null,
+) {
     add(CLIConfigurationKeys.CONTENT_ROOTS, JavaSourceRoot(file, packagePrefix))
 }
 
 @JvmOverloads
-fun CompilerConfiguration.addJavaSourceRoots(files: List<File>, packagePrefix: String? = null) {
+fun CompilerConfiguration.addJavaSourceRoots(
+    files: List<File>,
+    packagePrefix: String? = null,
+) {
     files.forEach { addJavaSourceRoot(it, packagePrefix) }
 }
 
 val CompilerConfiguration.javaSourceRoots: Set<String>
-    get() = getList(CLIConfigurationKeys.CONTENT_ROOTS).mapNotNullTo(linkedSetOf()) { root ->
-        when (root) {
-            is KotlinSourceRoot -> root.path
-            is JavaSourceRoot -> root.file.path
-            else -> null
+    get() =
+        getList(CLIConfigurationKeys.CONTENT_ROOTS).mapNotNullTo(linkedSetOf()) { root ->
+            when (root) {
+                is KotlinSourceRoot -> root.path
+                is JavaSourceRoot -> root.file.path
+                else -> null
+            }
         }
-    }
 
 fun CompilerConfiguration.configureJdkClasspathRoots() {
     if (getBoolean(JVMConfigurationKeys.NO_JDK)) return

@@ -17,33 +17,47 @@ class JavacLogger(
     context: Context,
     errorWriter: PrintWriter,
     warningWriter: PrintWriter,
-    infoWriter: PrintWriter
+    infoWriter: PrintWriter,
 ) : Log(context, infoWriter, errorWriter) {
     init {
         context.put(Log.outKey, infoWriter)
     }
 
-    override fun printLines(kind: WriterKind, message: String, vararg args: Any?) {}
+    override fun printLines(
+        kind: WriterKind,
+        message: String,
+        vararg args: Any?,
+    ) {}
 
     companion object {
-        fun preRegister(context: Context, messageCollector: MessageCollector) {
-            context.put(logKey, Context.Factory {
-                JavacLogger(
-                    it,
-                    PrintWriter(MessageCollectorAdapter(messageCollector, CompilerMessageSeverity.ERROR)),
-                    PrintWriter(MessageCollectorAdapter(messageCollector, CompilerMessageSeverity.WARNING)),
-                    PrintWriter(MessageCollectorAdapter(messageCollector, CompilerMessageSeverity.INFO))
-                )
-            })
+        fun preRegister(
+            context: Context,
+            messageCollector: MessageCollector,
+        ) {
+            context.put(
+                logKey,
+                Context.Factory {
+                    JavacLogger(
+                        it,
+                        PrintWriter(MessageCollectorAdapter(messageCollector, CompilerMessageSeverity.ERROR)),
+                        PrintWriter(MessageCollectorAdapter(messageCollector, CompilerMessageSeverity.WARNING)),
+                        PrintWriter(MessageCollectorAdapter(messageCollector, CompilerMessageSeverity.INFO)),
+                    )
+                },
+            )
         }
     }
 }
 
 private class MessageCollectorAdapter(
     private val messageCollector: MessageCollector,
-    private val severity: CompilerMessageSeverity
+    private val severity: CompilerMessageSeverity,
 ) : Writer() {
-    override fun write(buffer: CharArray, offset: Int, length: Int) {
+    override fun write(
+        buffer: CharArray,
+        offset: Int,
+        length: Int,
+    ) {
         if (length == 1 && buffer[0] == '\n') return
 
         messageCollector.report(severity, String(buffer, offset, length))
