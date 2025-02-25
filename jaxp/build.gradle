@@ -6,23 +6,23 @@
  */
 
 plugins {
-    id("java-library")
-    id("maven-publish")
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = "org.cosmic.ide"
-            artifactId = "the-unsafe"
-            version = "1.0.0"
-
-            from(components["java"])
-        }
-    }
+    id 'java-library'
+    id 'maven-publish'
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'org.cosmic.ide'
+            artifactId = 'jaxp'
+            version = 'jdk17u-a831b7a'
+
+            from components.java
+        }
+    }
 }
