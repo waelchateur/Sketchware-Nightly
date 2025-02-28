@@ -250,7 +250,7 @@ public class XmlToSvgConverter {
         imageView.setImageDrawable(new PictureDrawable(picture));
     }
     
-       private static String convertHexColor(String argb, Element vectorElement) {
+    private String convertHexColor(String argb, Element vectorElement) {
         if (argb.startsWith("@") || argb.startsWith("?")) {
             return getVectorColor(vectorElement);
         }
