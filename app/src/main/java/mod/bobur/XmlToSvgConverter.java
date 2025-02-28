@@ -14,15 +14,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import a.a.a.wq;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.activities.resources.editors.utils.ColorsEditorManager;
 import pro.sketchware.utility.FileUtil;
@@ -168,14 +165,12 @@ public class XmlToSvgConverter {
             if (!fillAlpha.isEmpty()) {
                 svg.append("fill-opacity=\"").append(fillAlpha).append("\" ");
             }
-            
         } else {
             svg.append("fill=\"none\" ");
         }
 
         if (!strokeColor.isEmpty()) {
             svg.append("stroke=\"").append(colorsEditorManager.getColorValue(SketchApplication.getContext(), strokeColor, 4)).append("\" ");
-
             if (!strokeWidth.isEmpty()) {
                 svg.append("stroke-width=\"").append(parseDimension(strokeWidth)).append("\" ");
             }
@@ -198,8 +193,8 @@ public class XmlToSvgConverter {
 
     public ArrayList<String> getVectorDrawables(String sc_id) {
         ArrayList<String> cache = new ArrayList<>();
-        FileUtil.listDir(wq.b(sc_id) + "/files/resource/drawable/", cache);
-        cache.sort(Comparator.comparingLong(path -> new File(path).lastModified()));
+        FileUtil.listDir("/storage/emulated/0/.sketchware/data/" + sc_id + "/files/resource/drawable/", cache);
+
         ArrayList<String> files = new ArrayList<>();
         for (String vectorPath : cache) {
             String fileName = Uri.parse(vectorPath).getLastPathSegment();
@@ -218,7 +213,6 @@ public class XmlToSvgConverter {
 
     public String getVectorFullPath(String sc_id, String fileName) {
         return "/storage/emulated/0/.sketchware/data/" + sc_id + "/files/resource/drawable/" + fileName + ".xml";
-
     }
 
     private String parseDimension(String value) {
@@ -228,34 +222,10 @@ public class XmlToSvgConverter {
     public String getVectorColor(Element vectorElement) {
         ColorsEditorManager colorsEditorManager = new ColorsEditorManager();
 
-    private static String convertHexColor(String argb, Element vectorElement) {
-        if (argb.startsWith("@") || argb.startsWith("?")) {
-            return getVectorColor(vectorElement);
-        }
-
-        String digits = argb.replaceAll("^#", "");
-        if (digits.length() != 4 && digits.length() != 8) return argb;
-
-        String red, green, blue, alpha;
-        if (digits.length() == 4) {
-            alpha = String.valueOf(digits.charAt(0));
-            red = String.valueOf(digits.charAt(1));
-            green = String.valueOf(digits.charAt(2));
-            blue = String.valueOf(digits.charAt(3));
-        } else {
-            alpha = digits.substring(0, 2);
-            red = digits.substring(2, 4);
-            green = digits.substring(4, 6);
-            blue = digits.substring(6, 8);
-        }
-        return "#" + red + green + blue + alpha;
-    }
-
-    public static String getVectorColor(Element vectorElement) {
         Element root = vectorElement.getOwnerDocument().getDocumentElement();
         String tint = root.getAttribute("android:tint");
         // check colors file
-        String filePath = wq.b(sc_id) + "/files/resource/values/colors.xml";
+        String filePath = "/storage/emulated/0/.sketchware/data/" + sc_id + "/files/resource/values/colors.xml";
         if (!FileUtil.isExistFile(filePath)) {
             filePath = "/storage/emulated/0/.sketchware/mysc/" + sc_id + "/app/src/main/res/values/colors.xml";
             if (!FileUtil.isExistFile(filePath)) {
