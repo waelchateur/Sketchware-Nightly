@@ -312,7 +312,7 @@ public class BuiltInLibraries {
             new BuiltInLibrary(ONESIGNAL, List.of(ANDROIDX_BROWSER, ANDROIDX_CARDVIEW, ANDROIDX_FRAGMENT, ANDROIDX_MEDIA, FIREBASE_MESSAGING,
                     PLAY_SERVICES_ADS_IDENTIFIER, PLAY_SERVICES_BASE, PLAY_SERVICES_LOCATION), "com.onesignal"),
 
-            new BuiltInLibrary(OTPVIEW, List.of(ANDROIDX_APPCOMPAT, ANDROIDX_CORE_KTX, ANDROIDX_CONSTRAINTLAYOUT, KOTLIN_STDLIB_JDK7),
+            new BuiltInLibrary(OTPVIEW, List.of(ANDROIDX_APPCOMPAT, ANDROIDX_CORE_KTX, ANDROIDX_CONSTRAINTLAYOUT),
                     "affan.ahmad.otp"),
 
             new BuiltInLibrary(PATTERN_LOCK_VIEW, List.of(ANDROIDX_CORE, JETBRAINS_ANNOTATIONS), "com.andrognito.patternlockview"),
@@ -359,7 +359,7 @@ public class BuiltInLibraries {
             new BuiltInLibrary(UMP_USER_MESSAGING_PLATFORM, List.of(ANDROIDX_ANNOTATION, PLAY_SERVICES_ADS_IDENTIFIER,
                     PLAY_SERVICES_BASEMENT)),
             new BuiltInLibrary(WAVE_SIDE_BAR, List.of(), "com.sayuti.lib"),
-            new BuiltInLibrary(YOUTUBE_PLAYER, List.of(ANDROIDX_APPCOMPAT, ANDROIDX_RECYCLERVIEW, KOTLIN_STDLIB_JDK7),
+            new BuiltInLibrary(YOUTUBE_PLAYER, List.of(ANDROIDX_APPCOMPAT, ANDROIDX_RECYCLERVIEW),
                     "com.pierfrancescosoffritti.androidyoutubeplayer"),
     };
 

@@ -10,9 +10,7 @@
         <item name="textInputStyle">@style/Widget.SketchwarePro.TextInputLayout</item>
         <item name="fontFamily">@font/gilroy</item>
         <item name="android:fontFamily">@font/gilroy</item>
-        <item name="switchPreferenceCompatStyle">
-            @style/Preference.SketchwarePro.SwitchPreferenceCompat
-        </item>
+        <item name="switchPreferenceCompatStyle">@style/Preference.SketchwarePro.SwitchPreferenceCompat</item>
         <item name="tabStyle">@style/TabLayoutStyle</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.SketchwarePro.BottomSheetDialog</item>
                 <item name="sideSheetDialogTheme">@style/ThemeOverlay.SketchwarePro.SideSheetDialog</item>
