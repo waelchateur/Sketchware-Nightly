@@ -157,13 +157,11 @@ dependencies {
     minApi21Implementation "net.sf.proguard:proguard-base:6.0.3"
     minApi26Implementation files('libs/proguard-base-7.2.2.jar')
     minApi26Implementation 'com.guardsquare:proguard-core:9.0.2'
-    minApi26Implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.21'
+    minApi26Implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.10'
 
     //noinspection GradleDependency
     minApi21Implementation "org.eclipse.jdt:ecj:3.13.0"
     minApi26Implementation "org.eclipse.jdt:ecj:3.26.0"
-
-    minApi26Implementation "com.github.Cosmic-Ide.kotlinc-android:kotlinc:2a0a6a7291"
 
     implementation "com.github.topjohnwu.libsu:core:5.0.4"
     implementation "dev.chrisbanes.insetter:insetter:0.6.1"
@@ -175,5 +173,5 @@ dependencies {
     implementation platform("com.google.firebase:firebase-bom:33.9.0")
     implementation "com.google.firebase:firebase-crashlytics"
     implementation "com.google.firebase:firebase-analytics"
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs_nio:2.1.4"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs_nio:2.1.5"
 }
