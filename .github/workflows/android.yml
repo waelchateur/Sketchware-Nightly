@@ -12,6 +12,7 @@ on:
       - 'gradlew.bat'
       - 'public-stable-ids.txt'
       - 'settings.gradle'
+      - 'kotlinc/**'
     branches-ignore:
       - 'wip/**'
   workflow_dispatch:
@@ -66,7 +67,17 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-
+        with:
+            cache-read-only: false
+            cache-write-only: false
+            cache-overwrite-existing: true
+            gradle-home-cache-cleanup: true
+            
+      - name: Clean Project
+        run: |
+          gradle --stop
+          ./gradlew clean
+          
       - name: Build Release APK
         env:
           SKETCHUB_API_KEY: ${{ secrets.SKETCHUB_API_KEY }}
