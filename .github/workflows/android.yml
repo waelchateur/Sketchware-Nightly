@@ -12,6 +12,7 @@ on:
       - 'gradlew.bat'
       - 'public-stable-ids.txt'
       - 'settings.gradle'
+      - 'kotlinc/**'
       
     branches-ignore:
       - 'wip/**'
