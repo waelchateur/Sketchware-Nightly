@@ -101,7 +101,12 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"], exclude: "proguard-base-7.2.2.jar")
+    minApi26Implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"], exclude: "proguard-base-7.2.2.jar")
+    minApi21Implementation fileTree(
+            dir: "libs",
+            include: ["*.jar", "*.aar"],
+            exclude: ["jaxp.jar", "kotlinc.jar", "proguard-base-7.2.2.jar", "kotlin-reflect.jar" , "kotlin-script-runtime.jar" , "the-unsafe.jar", "trove4j.jar"]
+    )
     // Multidex support
     implementation "androidx.multidex:multidex:2.0.1"
     implementation "androidx.appcompat:appcompat:1.7.0"
@@ -162,8 +167,7 @@ dependencies {
     //noinspection GradleDependency
     minApi21Implementation "org.eclipse.jdt:ecj:3.13.0"
     minApi26Implementation "org.eclipse.jdt:ecj:3.26.0"
-    
-    minApi26Implementation files('libs/kotlinc.jar')
+
     minApi26Implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.10'
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:6.1'
     implementation 'io.github.itsaky:nb-javac-android:17.0.0.3'
