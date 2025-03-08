@@ -116,7 +116,7 @@ public class BuiltInLibraries {
     public static String COROUTINES_CORE = "kotlinx-coroutines-core-jvm-1.7.1";
     public static String COROUTINES_GUAVA = "kotlinx-coroutines-guava-1.7.1";
     public static String LOTTIE = "lottie-3.4.0";
-    public static String MATERIAL = "material-1.13.0-alpha10";
+    public static String MATERIAL = "material-1.13.0-alpha11";
     public static String OKHTTP = "okhttp-3.9.1";
     public static String OKIO = "okio-1.17.4";
     public static String ONESIGNAL = "OneSignal-3.14.0";
