@@ -57,7 +57,7 @@ class KotlinCompiler(
             noJdk = true
             noReflect = true
             noStdlib = true
-
+            useFastJarFileSystem = true
             kotlinHome = mKotlinHome.absolutePath
             destination = mClassOutput.absolutePath
             pluginClasspaths = plugins
