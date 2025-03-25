@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -28,8 +29,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import a.a.a.XB;
 import a.a.a.Zx;
@@ -37,7 +36,6 @@ import a.a.a.aB;
 import a.a.a.xB;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import mod.hey.studios.code.SrcCodeEditor;
-import mod.hilal.saif.activities.tools.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.activities.coloreditor.adapters.ColorsAdapter;
 import pro.sketchware.activities.coloreditor.models.ColorItem;

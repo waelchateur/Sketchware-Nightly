@@ -7,7 +7,11 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.widget.Toolbar;
 
+import pro.sketchware.R;
+
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
+
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
@@ -18,8 +22,9 @@ import pro.sketchware.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ManageProguardActivity extends BaseAppCompatActivity
-        implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
+
+public class ManageProguardActivity extends BaseAppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private ProguardHandler pg;
     private MaterialSwitch sw_pg_enabled;
