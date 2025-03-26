@@ -36,6 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
+                    
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -52,6 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
+                    
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -68,6 +70,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text" />
+                    
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
@@ -145,7 +148,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="This will remove methods in files, like showMessage, getDip, etc."
+                        android:text="This will remove deprecated methods. Ex: showMessage, getDip, etc..."
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -160,102 +163,6 @@
                     android:minHeight="0dp" />
 
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/use_new_material_components_app_theme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:paddingHorizontal="24dp"
-                android:paddingVertical="16dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Use MaterialComponents"
-                        android:textAppearance="?attr/textAppearanceBodyLarge"
-                        android:textColor="?attr/colorOnSurface" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="This will replace e.g. Button with MaterialButton, be careful!"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-
-                </LinearLayout>
-
-                <CheckBox
-                    android:id="@+id/cb_use_new_material_components_app_theme"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-    </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginVertical="8dp">
-
-        <Button
-            android:id="@+id/cancel"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_weight="1"
-            android:text="@string/common_word_cancel" />
-
-        <Button
-            android:id="@+id/save"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/common_word_save"
-            android:layout_marginTop="10dp" />
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_target_sdk_version"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Target SDK version"
-                android:inputType="number" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_application_class_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_application_class_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Application class name"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
-
 
         <com.google.android.material.card.MaterialCardView
             style="?attr/materialCardViewFilledStyle"
@@ -305,7 +212,6 @@
                 android:orientation="vertical"
                 android:padding="12dp">
 
-
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/cb_remove_old_methods"
                     android:layout_width="match_parent"
@@ -319,7 +225,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="26dp"
-                    android:text="This will remove methods in files, like showMessage, getDip, etc."
+                    android:text="This will remove deprecated methods."
                     android:textColor="?android:attr/textColorSecondary" />
 
             </LinearLayout>
@@ -353,7 +259,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="26dp"
-                    android:text="This will use material design 3 in your app"
+                    android:text="This will enable material design 3 in your Project."
                     android:textColor="?android:attr/textColorSecondary" />
 
             </LinearLayout>
@@ -386,12 +292,36 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="26dp"
-                    android:text="The app will use android color palette, in devices with Android 12+"
+                    android:text="This will enable dynamic Colors in your Project. Note: only Android 12+ Are Supported"
                     android:textColor="?android:attr/textColorSecondary" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
->>>>>>> 8bba3d1 
+    </ScrollView>
+      
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginVertical="8dp">
+
+        <Button
+            android:id="@+id/cancel"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:text="@string/common_word_cancel" />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/common_word_save" />
 
     </LinearLayout>
 </LinearLayout>

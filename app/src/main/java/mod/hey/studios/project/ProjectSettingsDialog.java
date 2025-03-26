@@ -6,12 +6,10 @@ import static com.besome.sketch.Config.VAR_DEFAULT_TARGET_SDK_VERSION;
 import android.app.Activity;
 import android.view.View;
 
-<<<<<<< base
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-=======
+
 import com.besome.sketch.beans.ProjectLibraryBean;
->>>>>>> 8bba3d1 feat: add material 3 & dynamic colors
 
 import mod.hey.studios.util.Helper;
 
