@@ -367,6 +367,7 @@ public class ViewPane extends RelativeLayout {
             }
         }
         addView(rootLayout);
+    }
         
     private void addRootLayout() {
         ViewBean viewBean = new ViewBean("root", ViewBean.VIEW_TYPE_LAYOUT_LINEAR);
