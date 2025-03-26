@@ -37,6 +37,7 @@ import com.besome.sketch.beans.LayoutBean;
 import com.besome.sketch.beans.ProjectResourceBean;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.design.DesignActivity;
+import com.besome.sketch.beans.ProjectLibraryBean;
 import com.besome.sketch.editor.view.item.ItemAdView;
 import com.besome.sketch.editor.view.item.ItemBottomNavigationView;
 import com.besome.sketch.editor.view.item.ItemButton;
@@ -80,6 +81,8 @@ import a.a.a.wB;
 import a.a.a.wq;
 import a.a.a.yB;
 import a.a.a.zB;
+import a.a.a.jC;
+
 import dev.aldi.sayuti.editor.view.item.ItemBadgeView;
 import dev.aldi.sayuti.editor.view.item.ItemCircleImageView;
 import dev.aldi.sayuti.editor.view.item.ItemCodeView;
@@ -104,6 +107,7 @@ import mod.agus.jcoderz.editor.view.item.ItemTimePicker;
 import mod.agus.jcoderz.editor.view.item.ItemVideoView;
 import mod.bobur.XmlToSvgConverter;
 import mod.hey.studios.util.ProjectFile;
+import mod.hey.studios.project.ProjectSettings;
 
 import pro.sketchware.R;
 import pro.sketchware.managers.inject.InjectRootLayoutManager;
@@ -116,6 +120,9 @@ import pro.sketchware.utility.ResourceUtil;
 import pro.sketchware.utility.SvgUtils;
 
 public class ViewPane extends RelativeLayout {
+
+    private final String stringsStart = "@string/";
+
     private Context context;
     private ViewGroup rootLayout;
     private int b = 99;
@@ -124,9 +131,10 @@ public class ViewPane extends RelativeLayout {
     private TextView highlightedTextView;
     private kC resourcesManager;
     private String sc_id;
-    private final String stringsStart = "@string/";
-
     private SvgUtils svgUtils;
+    private ProjectSettings projectSettings;
+    private ProjectLibraryBean projectLibrary;
+    private int theme = R.style.ThemeOverlay_SketchwarePro_ViewPane;
 
     public ViewPane(Context context) {
         super(context);
@@ -139,12 +147,30 @@ public class ViewPane extends RelativeLayout {
     }
 
     private void initialize() {
-        context = new ContextThemeWrapper(getContext(), R.style.ThemeOverlay_SketchwarePro_ViewEditor);
+        context = getContext();
         svgUtils = new SvgUtils(context);
         svgUtils.initImageLoader();
         setBackgroundColor(Color.WHITE);
         //addRootLayout();
         initTextView();
+    }
+    
+    public void setResourceManager(kC resourcesManager) {
+        this.resourcesManager = resourcesManager;
+    }
+    
+    public void setScId(String sc_id) {
+        this.sc_id = sc_id;
+        reloadSettings();
+    }
+    
+    private void reloadSettings() {
+        projectSettings = new ProjectSettings(sc_id);
+        projectLibrary = jC.c(sc_id).c();
+        if (projectLibrary.isEnabled() && projectSettings.isMaterial3Enable()) {
+            theme = R.style.ThemeOverlay_SketchwarePro_ViewPane_Material3;
+        }
+        context = new ContextThemeWrapper(getContext(), theme);
     }
 
     public void clearViews() {
@@ -341,6 +367,19 @@ public class ViewPane extends RelativeLayout {
             }
         }
         addView(rootLayout);
+        
+    private void addRootLayout() {
+        ViewBean viewBean = new ViewBean("root", ViewBean.VIEW_TYPE_LAYOUT_LINEAR);
+        LayoutBean layoutBean = viewBean.layout;
+        layoutBean.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutBean.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutBean.orientation = LinearLayout.VERTICAL;
+        viewBean.parentType = ViewBean.VIEW_TYPE_LAYOUT_LINEAR;
+        View rootView = createItemView(viewBean);
+        ((ItemLinearLayout) rootView).setFixed(true);
+        rootLayout = (ViewGroup) rootView;
+        rootLayout.setBackgroundColor(0xffeeeeee);
+        addView(rootView);
     }
 
     private void updateItemView(View view, ViewBean viewBean) {
