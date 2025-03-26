@@ -85,7 +85,7 @@ public class Lx {
         if (isLibraryNotExcluded(BuiltInLibraries.ANDROIDX_APPCOMPAT, excludedLibraries) && metadata.g) {
             content.append("""
                     implementation 'androidx.appcompat:appcompat:1.7.0'\r
-                    implementation 'com.google.android.material:material:1.12.0'\r
+                    implementation 'com.google.android.material:material:1.13.0-alpha11'\r
                     """);
         }
 

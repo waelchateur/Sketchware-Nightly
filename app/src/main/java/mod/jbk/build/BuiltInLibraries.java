@@ -113,7 +113,7 @@ public class BuiltInLibraries {
     public static String JETBRAINS_ANNOTATIONS = "annotations-13.0";
     public static String KOTLIN_STDLIB = "kotlin-stdlib-1.6.21";
     public static String LOTTIE = "lottie-3.4.0";
-    public static String MATERIAL = "material-1.12.0";
+    public static String MATERIAL = "material-1.13.0-alpha11";
     public static String OKHTTP = "okhttp-3.9.1";
     public static String OKIO = "okio-1.17.4";
     public static String ONESIGNAL = "OneSignal-3.14.0";
