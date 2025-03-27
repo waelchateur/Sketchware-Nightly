@@ -960,21 +960,23 @@ public class yq {
         if (N.g) {
             XmlBuilderHelper stylesFileBuilder = new XmlBuilderHelper();
             
-            // todo: add `colorOnPrimary` to custom theme colors.
-            stylesFileBuilder.addItemToStyle("AppTheme", "colorOnPrimary", "@android:color/white");
             if (projectSettings.isMaterial3Enable()) {
-                stylesFileBuilder.addStyle("AppTheme", "Theme.Material3.Light.NoActionBar");
+                stylesFileBuilder.addStyle("AppTheme", "Theme.Material3.DayNight.NoActionBar");
+                stylesFileBuilder.addItemToStyle("AppTheme", "colorPrimary", "@color/colorPrimary");
+                stylesFileBuilder.addItemToStyle("AppTheme", "colorSecondary", "@color/colorAccent");
+                stylesFileBuilder.addItemToStyle("AppTheme", "colorTertiary", "@color/colorAccent");
+                stylesFileBuilder.addItemToStyle("AppTheme", "colorOnPrimary", "@color/colorControlNormal");
+                stylesFileBuilder.addItemToStyle("AppTheme", "colorOnSurface", "@color/colorControlNormal");
+                stylesFileBuilder.addItemToStyle("AppTheme", "colorOnSurfaceVariant", "@color/colorControlHighlight");
             } else {
-                stylesFileBuilder.addStyle("AppTheme", "Theme.MaterialComponents.Light.NoActionBar");
+                stylesFileBuilder.addStyle("AppTheme", "Theme.MaterialComponents.DayNight.NoActionBar");
+                stylesFileBuilder.addItemToStyle("AppTheme", "colorPrimary", "@color/colorPrimary");
+                stylesFileBuilder.addItemToStyle("AppTheme", "colorPrimaryDark", "@color/colorPrimaryDark");
+                stylesFileBuilder.addItemToStyle("AppTheme", "colorAccent", "@color/colorAccent");
+                stylesFileBuilder.addItemToStyle("AppTheme", "colorControlHighlight", "@color/colorControlHighlight");
+                stylesFileBuilder.addItemToStyle("AppTheme", "colorControlNormal", "@color/colorControlNormal");
             }
-            
-            //todo: new material attrs
-            stylesFileBuilder.addItemToStyle("AppTheme", "colorPrimary", "@color/colorPrimary");
-            stylesFileBuilder.addItemToStyle("AppTheme", "colorPrimaryDark", "@color/colorPrimaryDark");
-            stylesFileBuilder.addItemToStyle("AppTheme", "colorAccent", "@color/colorAccent");
-            stylesFileBuilder.addItemToStyle("AppTheme", "colorControlHighlight", "@color/colorControlHighlight");
-            stylesFileBuilder.addItemToStyle("AppTheme", "colorControlNormal", "@color/colorControlNormal");
-            
+          
             stylesFileBuilder.addStyle("AppTheme.FullScreen", "AppTheme");
             stylesFileBuilder.addItemToStyle("AppTheme.FullScreen", "android:windowFullscreen", "true");
             stylesFileBuilder.addItemToStyle("AppTheme.FullScreen", "android:windowContentOverlay", "@null");
@@ -1002,20 +1004,24 @@ public class yq {
             stylesFileBuilder.addItemToStyle("AppTheme", "android:colorAccent", "@color/colorAccent");
             stylesFileBuilder.addItemToStyle("AppTheme", "android:colorControlHighlight", "@color/colorControlHighlight");
             stylesFileBuilder.addItemToStyle("AppTheme", "android:colorControlNormal", "@color/colorControlNormal");
+            
             stylesFileBuilder.addStyle("FullScreen", "@android:style/Theme.Material.Light.NoActionBar.Fullscreen");
             stylesFileBuilder.addItemToStyle("FullScreen", "android:colorPrimary", "@color/colorPrimary");
             stylesFileBuilder.addItemToStyle("FullScreen", "android:colorPrimaryDark", "@color/colorPrimaryDark");
             stylesFileBuilder.addItemToStyle("FullScreen", "android:colorAccent", "@color/colorAccent");
             stylesFileBuilder.addItemToStyle("FullScreen", "android:colorControlHighlight", "@color/colorControlHighlight");
             stylesFileBuilder.addItemToStyle("FullScreen", "android:colorControlNormal", "@color/colorControlNormal");
+            
             stylesFileBuilder.addStyle("NoActionBar", "@android:style/Theme.Material.Light.NoActionBar");
             stylesFileBuilder.addItemToStyle("NoActionBar", "android:colorPrimary", "@color/colorPrimary");
             stylesFileBuilder.addItemToStyle("NoActionBar", "android:colorPrimaryDark", "@color/colorPrimaryDark");
             stylesFileBuilder.addItemToStyle("NoActionBar", "android:colorAccent", "@color/colorAccent");
             stylesFileBuilder.addItemToStyle("NoActionBar", "android:colorControlHighlight", "@color/colorControlHighlight");
             stylesFileBuilder.addItemToStyle("NoActionBar", "android:colorControlNormal", "@color/colorControlNormal");
+            
             stylesFileBuilder.addStyle("NoStatusBar", "AppTheme");
             stylesFileBuilder.addItemToStyle("NoStatusBar", "android:windowFullscreen", "true");
+            
             stylesFileBuilder.addStyle("AppTheme.DebugActivity", "AppTheme");
             return CommandBlock.applyCommands("styles.xml", stylesFileBuilder.toCode());
         }
