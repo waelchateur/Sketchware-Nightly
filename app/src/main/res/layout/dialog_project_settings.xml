@@ -70,7 +70,8 @@
                     android:inputType="text" />  
             </com.google.android.material.textfield.TextInputLayout>  
   
-            <LinearLayout  
+            <LinearLayout
+                android:id="@+id/enable_viewbinding" 
                 android:layout_width="match_parent"  
                 android:layout_height="wrap_content"  
                 android:layout_marginTop="8dp"  
@@ -115,7 +116,8 @@
   
             </LinearLayout>  
   
-            <LinearLayout  
+            <LinearLayout
+                android:id="@+id/remove_old_methods"  
                 android:layout_width="match_parent"  
                 android:layout_height="wrap_content"  
                 android:background="?attr/selectableItemBackground"  
@@ -159,7 +161,8 @@
   
             </LinearLayout>  
   
-            <LinearLayout  
+            <LinearLayout
+                android:id="@+id/enable_material3" 
                 android:layout_width="match_parent"  
                 android:layout_height="wrap_content"  
                 android:background="?attr/selectableItemBackground"  
@@ -203,7 +206,8 @@
   
             </LinearLayout>  
               
-            <LinearLayout  
+            <LinearLayout
+                android:id="@+id/enable_dynamic_colors"
                 android:layout_width="match_parent"  
                 android:layout_height="wrap_content"  
                 android:background="?attr/selectableItemBackground"  
@@ -223,7 +227,7 @@
                     <TextView  
                         android:layout_width="wrap_content"  
                         android:layout_height="wrap_content"  
-                        android:text="Use Dynamic Colors"  
+                        android:text="Enable Dynamic Colors"  
                         android:textAppearance="?attr/textAppearanceBodyLarge"  
                         android:textColor="?attr/colorOnSurface" />  
   
