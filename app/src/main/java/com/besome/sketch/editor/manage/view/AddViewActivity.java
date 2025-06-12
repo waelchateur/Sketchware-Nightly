@@ -6,6 +6,7 @@ import android.transition.AutoTransition;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
-import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.util.ArrayList;
 
@@ -206,6 +207,10 @@ public class AddViewActivity extends BaseAppCompatActivity {
             }
         });
 
+        String[] viewTypes = {"Activity", "Fragment", "DialogFragment", "BottomSheetDialogFragment"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, viewTypes);
+        binding.viewTypeSpinner.setAdapter(adapter);
+
         binding.btnSave.setOnClickListener(v -> {
             int options = ProjectFileBean.OPTION_ACTIVITY_TOOLBAR;
             if (265 == requestCode) {
@@ -230,7 +235,16 @@ public class AddViewActivity extends BaseAppCompatActivity {
                 bB.a(getApplicationContext(), xB.b().a(getApplicationContext(), R.string.design_manager_message_edit_complete, new Object[0]), bB.TOAST_NORMAL).show();
                 finish();
             } else if (isValid(nameValidator)) {
-                String var4 = Helper.getText(binding.edName) + getSuffix(binding.viewTypeSelector);
+                String selectedType = binding.viewTypeSpinner.getText().toString();
+                String suffix = "";
+                if ("Fragment".equals(selectedType)) {
+                    suffix = "_fragment";
+                } else if ("DialogFragment".equals(selectedType)) {
+                    suffix = "_dialog_fragment";
+                } else if ("BottomSheetDialogFragment".equals(selectedType)) {
+                    suffix = "_bottomdialog_fragment";
+                }
+                String var4 = Helper.getText(binding.edName) + suffix;
                 ProjectFileBean projectFileBean = new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, var4, getSelectedButtonIndex(binding.screenOrientationSelector), getSelectedButtonIndex(binding.keyboardSettingsSelector), featureToolbar, !featureStatusBar, featureFab, featureDrawer);
                 Intent intent = new Intent();
                 intent.putExtra("project_file", projectFileBean);
@@ -241,12 +255,13 @@ public class AddViewActivity extends BaseAppCompatActivity {
                 bB.a(getApplicationContext(), xB.b().a(getApplicationContext(), R.string.design_manager_message_add_complete, new Object[0]), bB.TOAST_NORMAL).show();
                 finish();
             }
-
         });
+
         binding.btnCancel.setOnClickListener(v -> {
             setResult(RESULT_CANCELED);
             finish();
         });
+
         if (requestCode == 265) {
             nameValidator = new YB(getApplicationContext(), binding.tiName, uq.b, new ArrayList<>(), projectFileBean.fileName);
             binding.edName.setText(projectFileBean.fileName);
@@ -270,27 +285,18 @@ public class AddViewActivity extends BaseAppCompatActivity {
         initializeItems();
     }
 
-    private String getSuffix(MaterialButtonToggleGroup toggleGroup) {
-        return switch (getSelectedButtonIndex(toggleGroup)) {
-            case 1 -> "_fragment";
-            case 2 -> "_dialog_fragment";
-            case 3 -> "_bottomdialog_fragment";
-            default -> "";
-        };
-    }
-
-    public int getSelectedButtonIndex(MaterialButtonToggleGroup toggleGroup) {
+    public int getSelectedButtonIndex(ViewGroup toggleGroup) {
         for (int i = 0; i < toggleGroup.getChildCount(); i++) {
             var button = toggleGroup.getChildAt(i);
-            if (toggleGroup.getCheckedButtonIds().contains(button.getId())) {
+            if (button.isSelected() || button.isPressed()) {
                 return i;
             }
         }
-        return -1;  // Return -1 if no button is selected
+        return 0;
     }
 
     public void makeTransitionAnimation(LinearLayout linearLayout) {
-        AutoTransition autoTransition = new android.transition.AutoTransition();
+        AutoTransition autoTransition = new AutoTransition();
         autoTransition.setDuration(200);
         TransitionManager.beginDelayedTransition(linearLayout, autoTransition);
     }
