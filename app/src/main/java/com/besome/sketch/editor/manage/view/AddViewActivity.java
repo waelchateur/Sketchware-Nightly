@@ -10,16 +10,18 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
-import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import a.a.a.YB;
 import a.a.a.bB;
@@ -40,7 +42,12 @@ public class AddViewActivity extends BaseAppCompatActivity {
     private String P;
     private ArrayList<FeatureItem> featureItems;
     private FeaturesAdapter featuresAdapter;
-
+    private static final Map<String, String> VIEW_TYPE_SUFFIX_MAP = new HashMap<>();
+    static {
+        VIEW_TYPE_SUFFIX_MAP.put("Fragment", "_fragment");
+        VIEW_TYPE_SUFFIX_MAP.put("DialogFragment", "_dialog_fragment");
+        VIEW_TYPE_SUFFIX_MAP.put("BottomSheetDialogFragment", "_bottomdialog_fragment");
+    }
     private ManageScreenActivityAddTempBinding binding;
 
     private void a(FeatureItem featureItem) {
@@ -195,22 +202,34 @@ public class AddViewActivity extends BaseAppCompatActivity {
 
         featuresAdapter = new FeaturesAdapter();
         binding.featureTypes.setAdapter(featuresAdapter);
-
-        binding.keyboardSettingsSelector.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            if (isChecked) {
-                if (checkedId == R.id.select_visible || checkedId == R.id.select_unspecified) {
-                    resetTranslationY(binding.imgKeyboard);
-                } else {
-                    slideOutVertically(binding.imgKeyboard);
-                }
-            }
+        
+        String[] viewTypes = {"Activity", "Fragment", "DialogFragment", "BottomSheetDialogFragment"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, viewTypes);
+        binding.viewTypeMenu.setAdapter(adapter);
+        binding.viewTypeMenu.setText(viewTypes[0], false);
+        
+        String[] orientationOptions = {"Portrait", "Landscape", "Both"};
+        ArrayAdapter<String> orientationAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, orientationOptions);
+        binding.screenOrientationMenu.setAdapter(orientationAdapter);
+        binding.screenOrientationMenu.setText("Portrait", false);
+        
+        String[] keyboardOptions = {"Visible", "Hidden", "Unspecified"};
+        ArrayAdapter<String> keyboardAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, keyboardOptions);
+        binding.keyboardSettingsMenu.setAdapter(keyboardAdapter);
+        binding.keyboardSettingsMenu.setOnItemClickListener((parent, view, position, id) -> {
+               if (position == 0 || position == 2) {
+                   resetTranslationY(binding.imgKeyboard);
+               } else {
+                  slideOutVertically(binding.imgKeyboard); 
+               }
         });
 
         binding.btnSave.setOnClickListener(v -> {
             int options = ProjectFileBean.OPTION_ACTIVITY_TOOLBAR;
             if (265 == requestCode) {
-                projectFileBean.orientation = getSelectedButtonIndex(binding.screenOrientationSelector);
-                projectFileBean.keyboardSetting = getSelectedButtonIndex(binding.keyboardSettingsSelector);
+                projectFileBean.orientation = getSelectedDropdownIndex(binding.screenOrientationMenu);
+                projectFileBean.keyboardSetting = getSelectedDropdownIndex(binding.keyboardSettingsMenu);
+                
                 if (!featureToolbar) {
                     options = 0;
                 }
@@ -229,9 +248,14 @@ public class AddViewActivity extends BaseAppCompatActivity {
                 setResult(RESULT_OK, intent);
                 bB.a(getApplicationContext(), xB.b().a(getApplicationContext(), R.string.design_manager_message_edit_complete, new Object[0]), bB.TOAST_NORMAL).show();
                 finish();
+                
             } else if (isValid(nameValidator)) {
-                String var4 = Helper.getText(binding.edName) + getSuffix(binding.viewTypeSelector);
-                ProjectFileBean projectFileBean = new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, var4, getSelectedButtonIndex(binding.screenOrientationSelector), getSelectedButtonIndex(binding.keyboardSettingsSelector), featureToolbar, !featureStatusBar, featureFab, featureDrawer);
+                
+                String selectedType = binding.viewTypeMenu.getText().toString();
+                String suffix = VIEW_TYPE_SUFFIX_MAP.getOrDefault(selectedType, "");
+                String var4 = Helper.getText(binding.edName) + suffix;
+                
+                ProjectFileBean projectFileBean = new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, var4, getSelectedDropdownIndex(binding.screenOrientationMenu), getSelectedDropdownIndex(binding.keyboardSettingsMenu), featureToolbar, !featureStatusBar, featureFab, featureDrawer);
                 Intent intent = new Intent();
                 intent.putExtra("project_file", projectFileBean);
                 if (P != null) {
@@ -254,15 +278,17 @@ public class AddViewActivity extends BaseAppCompatActivity {
             binding.edName.setBackgroundResource(R.color.transparent);
             initItem(projectFileBean.options);
             binding.addViewTypeSelectorLayout.setVisibility(View.GONE);
-            binding.screenOrientationSelector.check(binding.screenOrientationSelector.getChildAt(projectFileBean.orientation).getId());
-            binding.keyboardSettingsSelector.check(binding.keyboardSettingsSelector.getChildAt(projectFileBean.keyboardSetting).getId());
-
-            binding.imgKeyboard.post(() -> {
-                if (binding.keyboardSettingsSelector.getCheckedButtonId() == R.id.select_hidden) {
+            binding.screenOrientationMenu.setText(orientationOptions[projectFileBean.orientation], false);
+            binding.keyboardSettingsMenu.setText(keyboardOptions[projectFileBean.keyboardSetting], false);
+            binding.keyboardSettingsMenu.post(() -> {
+                if (projectFileBean.keyboardSetting == 1) {
                     slideOutVertically(binding.imgKeyboard);
                 }
             });
+            
         } else {
+            binding.screenOrientationMenu.setText("Both", false);
+            binding.keyboardSettingsMenu.setText("Unspecified", false);
             featureToolbar = true;
             featureStatusBar = true;
             nameValidator = new YB(getApplicationContext(), binding.tiName, uq.b, screenNames);
@@ -270,23 +296,9 @@ public class AddViewActivity extends BaseAppCompatActivity {
         initializeItems();
     }
 
-    private String getSuffix(MaterialButtonToggleGroup toggleGroup) {
-        return switch (getSelectedButtonIndex(toggleGroup)) {
-            case 1 -> "_fragment";
-            case 2 -> "_dialog_fragment";
-            case 3 -> "_bottomdialog_fragment";
-            default -> "";
-        };
-    }
-
-    public int getSelectedButtonIndex(MaterialButtonToggleGroup toggleGroup) {
-        for (int i = 0; i < toggleGroup.getChildCount(); i++) {
-            var button = toggleGroup.getChildAt(i);
-            if (toggleGroup.getCheckedButtonIds().contains(button.getId())) {
-                return i;
-            }
-        }
-        return -1;  // Return -1 if no button is selected
+    private int getSelectedDropdownIndex(MaterialAutoCompleteTextView dropdown) {
+        int index = dropdown.getListSelection();
+        return index == -1 ? 0 : index;
     }
 
     public void makeTransitionAnimation(LinearLayout linearLayout) {

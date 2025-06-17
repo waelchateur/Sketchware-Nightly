@@ -46,7 +46,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    style="@style/Widget.SketchwarePro.CardView.ActivityPreview">
 
                     <RelativeLayout
                         android:layout_width="140dp"
@@ -163,8 +164,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:importantForAutofill="noExcludeDescendants">
-
+                android:importantForAutofill="noExcludeDescendants"
+                style="@style/Widget.SketchwarePro.TextInputLayout">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/ed_name"
                     android:layout_width="match_parent"
@@ -235,59 +236,30 @@
                     android:orientation="vertical"
                     android:paddingTop="16dp">
 
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:text="Type"
                         android:textColor="?colorPrimary" />
-
-                    <HorizontalScrollView
+                        
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/viewTypeSelector"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:scrollbars="none">
-
-                        <com.google.android.material.button.MaterialButtonToggleGroup
-                            android:id="@+id/viewTypeSelector"
-                            android:layout_width="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:endIconMode="dropdown_menu"
+                        style="@style/Widget.SketchwarePro.TextInputLayout.ExposedDropdownMenu">
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/view_type_menu"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center_horizontal"
-                            app:checkedButton="@id/select_activity"
-                            app:selectionRequired="true"
-                            app:singleSelection="true">
-
-                            <Button
-                                android:id="@+id/select_activity"
-                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Activity" />
-
-                            <Button
-                                android:id="@+id/select_fragment"
-                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Fragment" />
-
-                            <Button
-                                android:id="@+id/select_dialogfragment"
-                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="DialogFragment" />
-
-                            <Button
-                                android:id="@+id/select_bottomsheetdialogfragment"
-                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="BottomSheetDialogFragment" />
-                        </com.google.android.material.button.MaterialButtonToggleGroup>
-                    </HorizontalScrollView>
+                            android:hint="Select View Type"
+                            android:inputType="none"
+                            android:focusable="false"
+                            android:cursorVisible="false"
+                            style="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox"/>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -296,50 +268,30 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:paddingTop="16dp">
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:text="Screen orientation"
                         android:textColor="?colorPrimary" />
-
-                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/screenOrientationSelector"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="4dp"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center_horizontal"
-                        app:checkedButton="@id/select_both"
-                        app:selectionRequired="true"
-                        app:singleSelection="true">
-
-                        <Button
-                            android:id="@+id/select_portrait"
-                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:endIconMode="dropdown_menu"
+                        style="@style/Widget.SketchwarePro.TextInputLayout.ExposedDropdownMenu">
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/screen_orientation_menu"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Portrait" />
-
-                        <Button
-                            android:id="@+id/select_landscape"
-                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Landscape" />
-
-                        <Button
-                            android:id="@+id/select_both"
-                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Both" />
-
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
+                            android:hint="Select Screen Orientation"
+                            android:inputType="none"
+                            android:focusable="false"
+                            android:cursorVisible="false"
+                            style="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox"/>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -348,49 +300,30 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:paddingTop="16dp">
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:text="Keyboard settings"
                         android:textColor="?colorPrimary" />
-
-                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/keyboardSettingsSelector"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="4dp"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center_horizontal"
-                        app:checkedButton="@id/select_unspecified"
-                        app:selectionRequired="true"
-                        app:singleSelection="true">
-
-                        <Button
-                            android:id="@+id/select_unspecified"
-                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:endIconMode="dropdown_menu"
+                        style="@style/Widget.SketchwarePro.TextInputLayout.ExposedDropdownMenu">
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/keyboard_settings_menu"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Unspecified" />
-
-                        <Button
-                            android:id="@+id/select_visible"
-                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Visible" />
-
-                        <Button
-                            android:id="@+id/select_hidden"
-                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Hidden" />
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
+                            android:hint="Select Keyboard Settings"
+                            android:inputType="none"
+                            android:focusable="false"
+                            android:cursorVisible="false"
+                            style="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox"/>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -407,7 +340,7 @@
 
         <Button
             android:id="@+id/btn_cancel"
-            style="@style/Widget.Material3Expressive.Button.TonalButton"
+            style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -416,7 +349,7 @@
 
         <Button
             android:id="@+id/btn_save"
-            style="@style/Widget.Material3Expressive.Button"
+            style="@style/Widget.Material3.Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

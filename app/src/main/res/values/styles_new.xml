@@ -103,6 +103,11 @@
         <item name="cardCornerRadius">18dp</item>
         <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
     </style>
+    
+    <style name="Widget.SketchwarePro.CardView.ActivityPreview" parent="Widget.Material3.CardView.Filled">
+        <item name="cardCornerRadius">4dp</item>
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
+    </style>
 
     <style name="Widget.SketchwarePro.Chip" parent="Widget.Material3.Chip.Input.Icon.Elevated">
         <item name="closeIconEnabled">false</item>
