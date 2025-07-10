@@ -52,6 +52,8 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     private DependencyHistoryManager historyManager;
     private DependencyHistoryAdapter historyAdapter;
 
+    private boolean isSearchingPhase = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -86,12 +88,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         buildSettings = (BuildSettings) getArguments().getSerializable("buildSettings");
         localLibFile = getArguments().getString("localLibFile");
 
-        binding.btnCancel.setOnClickListener(v -> {
-            if (downloadExecutor != null && !downloadExecutor.isShutdown()) {
-                downloadExecutor.shutdownNow();
-            }
-            dismiss();
-        });
+        binding.btnCancel.setOnClickListener(v -> dismiss());
         binding.btnDownload.setOnClickListener(v -> initDownloadFlow());
     }
 
@@ -132,9 +129,18 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void showDownloadConfirmationDialog(String group, String artifact, String version) {
+        boolean skipSubdependencies = binding.cbSkipSubdependencies.isChecked();
+
+        String message;
+        if (skipSubdependencies) {
+            message = "Are you sure you want to download " + dependencyName;
+        } else {
+            message = "Are you sure you want to download " + dependencyName + " and its sub-dependencies?";
+        }
+
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Confirm Download")
-                .setMessage("Do you want to download " + dependencyName + " and its dependencies?")
+                .setMessage(message)
                 .setPositiveButton("Download", (dialog, which) -> {
                     startDownloadProcess(group, artifact, version);
                 })
@@ -149,6 +155,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         binding.overallProgress.setVisibility(View.VISIBLE);
         binding.dependenciesRecyclerView.setVisibility(View.VISIBLE);
 
+        isSearchingPhase = true;
         setDownloadState(true);
 
         var resolver = new DependencyResolver(group, artifact, version,
@@ -233,6 +240,8 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                 @Override
                 public void onDownloadStart(@NonNull Artifact dep) {
                     handler.post(() -> {
+                        isSearchingPhase = false;
+                        setDownloadState(true);
                         DependencyDownloadItem item = findOrCreateDependencyItem(dep);
                         item.setState(DependencyDownloadItem.DownloadState.DOWNLOADING);
                         dependencyAdapter.updateDependency(item);
@@ -343,9 +352,15 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void setDownloadState(boolean downloading) {
-        binding.btnCancel.setVisibility(downloading ? View.VISIBLE : View.GONE);
-        binding.btnCancel.setText(downloading ? "Cancel Download" : "Cancel");
-        binding.btnDownload.setEnabled(!downloading);
+        if (downloading) {
+            binding.btnCancel.setVisibility(View.GONE);
+            binding.btnDownload.setVisibility(View.GONE);
+        } else {
+            binding.btnCancel.setVisibility(View.VISIBLE);
+            binding.btnDownload.setVisibility(View.VISIBLE);
+            binding.btnDownload.setEnabled(true);
+        }
+
         binding.dependencyInput.setEnabled(!downloading);
         binding.cbSkipSubdependencies.setEnabled(!downloading);
         setCancelable(!downloading);
