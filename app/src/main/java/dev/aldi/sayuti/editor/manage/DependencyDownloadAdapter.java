@@ -58,14 +58,6 @@ public class DependencyDownloadAdapter extends RecyclerView.Adapter<DependencyDo
         notifyItemInserted(dependencies.size() - 1);
     }
 
-    public void removeDependency(@NonNull DependencyDownloadItem item) {
-        int index = dependencies.indexOf(item);
-        if (index != -1) {
-            dependencies.remove(index);
-            notifyItemRemoved(index);
-        }
-    }
-
     public List<DependencyDownloadItem> getDependencies() {
         return new ArrayList<>(dependencies);
     }
@@ -84,7 +76,7 @@ public class DependencyDownloadAdapter extends RecyclerView.Adapter<DependencyDo
 
             switch (item.getState()) {
                 case PENDING:
-                case RESOLVING:
+                case RESOLVING, UNZIPPING, DEXING:
                     binding.progressIndicator.setIndeterminate(true);
                     binding.progressIndicator.setVisibility(View.VISIBLE);
                     break;
@@ -95,32 +87,15 @@ public class DependencyDownloadAdapter extends RecyclerView.Adapter<DependencyDo
                     binding.progressIndicator.setVisibility(View.VISIBLE);
                     break;
 
-                case UNZIPPING:
-                case DEXING:
-                    binding.progressIndicator.setIndeterminate(true);
-                    binding.progressIndicator.setVisibility(View.VISIBLE);
-                    break;
-
                 case COMPLETED:
                     binding.progressIndicator.setIndeterminate(false);
                     binding.progressIndicator.setProgress(100);
                     binding.progressIndicator.setVisibility(View.VISIBLE);
                     break;
 
-                case ERROR:
-                    binding.progressIndicator.setVisibility(View.GONE);
-                    binding.progressText.setTextColor(
-                            binding.getRoot().getContext().getColor(android.R.color.holo_red_dark));
-                    break;
-
                 default:
                     binding.progressIndicator.setVisibility(View.GONE);
                     break;
-            }
-
-            if (item.getState() != DependencyDownloadItem.DownloadState.ERROR) {
-                binding.progressText.setTextColor(
-                        binding.getRoot().getContext().getColor(android.R.color.tertiary_text_light));
             }
         }
     }
