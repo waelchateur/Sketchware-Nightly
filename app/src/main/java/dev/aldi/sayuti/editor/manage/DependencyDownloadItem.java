@@ -1,8 +1,9 @@
 package dev.aldi.sayuti.editor.manage;
 
 import androidx.annotation.NonNull;
+import java.util.Locale;
+import java.util.Objects;
 import org.cosmic.ide.dependency.resolver.api.Artifact;
-
 public class DependencyDownloadItem {
 
     public enum DownloadState {
@@ -19,9 +20,9 @@ public class DependencyDownloadItem {
     private final String displayName;
     private DownloadState state;
     private String statusMessage;
-    private long bytesDownloaded;
-    private long totalBytes;
-    private int progress; // 0-100
+    private final long bytesDownloaded;
+    private final long totalBytes;
+    private final int progress; // 0-100
     private String errorMessage;
     private final Artifact artifact;
 
@@ -29,10 +30,9 @@ public class DependencyDownloadItem {
         this.artifact = artifact;
         this.name = artifact.toString();
         this.displayName = artifact.getArtifactId() + "-" + artifact.getVersion();
-        this.state = DownloadState.PENDING;
-        this.statusMessage = "Pending...";
-        this.bytesDownloaded = 0;
-        this.totalBytes = 0;
+        setState(DownloadState.PENDING);
+        bytesDownloaded = 0;
+        totalBytes = 0;
         this.progress = 0;
         this.errorMessage = null;
     }
@@ -53,20 +53,8 @@ public class DependencyDownloadItem {
         return statusMessage;
     }
 
-    public long getBytesDownloaded() {
-        return bytesDownloaded;
-    }
-
-    public long getTotalBytes() {
-        return totalBytes;
-    }
-
     public int getProgress() {
         return progress;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
     }
 
     public Artifact getArtifact() {
@@ -75,15 +63,6 @@ public class DependencyDownloadItem {
 
     public void setState(DownloadState state) {
         this.state = state;
-        updateStatusMessage();
-    }
-
-    public void setDownloadProgress(long bytesDownloaded, long totalBytes) {
-        this.bytesDownloaded = bytesDownloaded;
-        this.totalBytes = totalBytes;
-        if (totalBytes > 0) {
-            this.progress = (int) ((bytesDownloaded * 100) / totalBytes);
-        }
         updateStatusMessage();
     }
 
@@ -125,11 +104,10 @@ public class DependencyDownloadItem {
 
     private String formatBytes(long bytes) {
         if (bytes < 1024) {
-            return bytes + " B";
-        } else if (bytes < 1024 * 1024) {
-            return String.format("%.1f KB", bytes / 1024.0);
+            return bytes + " B";    } else if (bytes < 1048576) { // 1024 * 1024
+            return String.format(Locale.getDefault(), "%.1f KB", bytes / 1024.0);
         } else {
-            return String.format("%.1f MB", bytes / (1024.0 * 1024.0));
+            return String.format(Locale.getDefault(), "%.1f MB", bytes / 1048576.0);
         }
     }
 
@@ -141,42 +119,31 @@ public class DependencyDownloadItem {
         return state == DownloadState.ERROR;
     }
 
-    public boolean isInProgress() {
-        return state == DownloadState.DOWNLOADING ||
-                state == DownloadState.UNZIPPING ||
-                state == DownloadState.DEXING ||
-                state == DownloadState.RESOLVING;
-    }
-
-    public boolean isPending() {
-        return state == DownloadState.PENDING;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         DependencyDownloadItem that = (DependencyDownloadItem) obj;
-        return name.equals(that.name);
+        return Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return Objects.hash(name);
     }
-
     @Override
+    @NonNull
     public String toString() {
-        return "DependencyDownloadItem{" +
-                "name='" + name + '\'' +
-                ", displayName='" + displayName + '\'' +
-                ", state=" + state +
-                ", statusMessage='" + statusMessage + '\'' +
-                ", bytesDownloaded=" + bytesDownloaded +
-                ", totalBytes=" + totalBytes +
-                ", progress=" + progress +
-                ", errorMessage='" + errorMessage + '\'' +
-                '}';
+        return "DependencyDownloadItem{"
+                + "name='" + name + '\''
+                + ", displayName='" + displayName + '\''
+                + ", state=" + state
+                + ", statusMessage='" + statusMessage + '\''
+                + ", bytesDownloaded=" + bytesDownloaded
+                + ", totalBytes=" + totalBytes
+                + ", progress=" + progress
+                + ", errorMessage='" + errorMessage + '\''
+                + '}';
     }
 
 }
