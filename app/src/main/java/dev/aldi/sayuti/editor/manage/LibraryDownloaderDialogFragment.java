@@ -44,7 +44,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     private LibraryDownloaderDialogBinding binding;
 
     private DependencyDownloadAdapter dependencyAdapter;
-    private List<DependencyDownloadItem> downloadItems = new ArrayList<>();
+    private final List<DependencyDownloadItem> downloadItems = new ArrayList<>();
     private ExecutorService downloadExecutor;
 
     private final Gson gson = new Gson();
@@ -58,7 +58,6 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     private DependencyHistoryManager historyManager;
     private DependencyHistoryAdapter historyAdapter;
 
-    private boolean isSearchingPhase = false;
     private ConnectivityManager connectivityManager;
     private NetworkCallback networkCallback;
 
@@ -89,7 +88,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         binding.dependenciesRecyclerView.setAdapter(dependencyAdapter);
         binding.dependenciesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        historyManager = new DependencyHistoryManager(getContext());
+        historyManager = new DependencyHistoryManager(requireContext());
         setupAutoComplete();
 
         downloadExecutor = Executors.newSingleThreadExecutor();
@@ -154,7 +153,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
 
     private void initDownloadFlow() {
         dependencyName = Helper.getText(binding.dependencyInput);
-        if (dependencyName == null || dependencyName.isEmpty()) {
+        if (dependencyName.isEmpty()) {
             binding.dependencyInputLayout.setError("Please enter a dependency");
             binding.dependencyInputLayout.setErrorEnabled(true);
             return;
@@ -183,9 +182,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Confirm Download")
                 .setMessage(message)
-                .setPositiveButton("Download", (dialog, which) -> {
-                    startDownloadProcess(group, artifact, version);
-                })
+                .setPositiveButton("Download", (dialog, which) -> startDownloadProcess(group, artifact, version))
                 .setNegativeButton("Cancel", null)
                 .show();
     }
@@ -197,7 +194,6 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         binding.overallProgress.setVisibility(View.VISIBLE);
         binding.dependenciesRecyclerView.setVisibility(View.VISIBLE);
 
-        isSearchingPhase = true;
         setDownloadState(true);
 
         var resolver = new DependencyResolver(group, artifact, version,
@@ -221,9 +217,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
 
                 @Override
                 public void onResolutionComplete(@NonNull Artifact dep) {
-                    handler.post(() -> {
-                        updateDependencyState(dep, DependencyDownloadItem.DownloadState.COMPLETED);
-                    });
+                    handler.post(() -> updateDependencyState(dep, DependencyDownloadItem.DownloadState.COMPLETED));
                 }
 
                 @Override
@@ -282,7 +276,6 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                 @Override
                 public void onDownloadStart(@NonNull Artifact dep) {
                     handler.post(() -> {
-                        isSearchingPhase = false;
                         setDownloadState(true);
                         DependencyDownloadItem item = findOrCreateDependencyItem(dep);
                         item.setState(DependencyDownloadItem.DownloadState.DOWNLOADING);
@@ -313,16 +306,12 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
 
                 @Override
                 public void unzipping(@NonNull Artifact artifact) {
-                    handler.post(() -> {
-                        updateDependencyState(artifact, DependencyDownloadItem.DownloadState.UNZIPPING);
-                    });
+                    handler.post(() -> updateDependencyState(artifact, DependencyDownloadItem.DownloadState.UNZIPPING));
                 }
 
                 @Override
                 public void dexing(@NonNull Artifact dep) {
-                    handler.post(() -> {
-                        updateDependencyState(dep, DependencyDownloadItem.DownloadState.DEXING);
-                    });
+                    handler.post(() -> updateDependencyState(dep, DependencyDownloadItem.DownloadState.DEXING));
                 }
 
                 @Override
