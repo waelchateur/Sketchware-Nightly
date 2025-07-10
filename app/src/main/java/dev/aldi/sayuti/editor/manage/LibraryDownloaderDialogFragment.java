@@ -12,13 +12,17 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 
 import org.cosmic.ide.dependency.resolver.api.Artifact;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import mod.hey.studios.build.BuildSettings;
@@ -32,6 +36,10 @@ import pro.sketchware.utility.SketchwareUtil;
 
 public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     private LibraryDownloaderDialogBinding binding;
+
+    private DependencyDownloadAdapter dependencyAdapter;
+    private List<DependencyDownloadItem> downloadItems = new ArrayList<>();
+    private ExecutorService downloadExecutor;
 
     private final Gson gson = new Gson();
     private BuildSettings buildSettings;
@@ -49,16 +57,36 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (downloadExecutor != null && !downloadExecutor.isShutdown()) {
+            downloadExecutor.shutdownNow();
+        }
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         if (getArguments() == null) return;
 
+        // Configurar RecyclerView
+        dependencyAdapter = new DependencyDownloadAdapter();
+        binding.dependenciesRecyclerView.setAdapter(dependencyAdapter);
+        binding.dependenciesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        downloadExecutor = Executors.newSingleThreadExecutor();
+
         notAssociatedWithProject = getArguments().getBoolean("notAssociatedWithProject", false);
         buildSettings = (BuildSettings) getArguments().getSerializable("buildSettings");
         localLibFile = getArguments().getString("localLibFile");
 
-        binding.btnCancel.setOnClickListener(v -> dismiss());
+        binding.btnCancel.setOnClickListener(v -> {
+            if (downloadExecutor != null && !downloadExecutor.isShutdown()) {
+                downloadExecutor.shutdownNow();
+            }
+            dismiss();
+        });
         binding.btnDownload.setOnClickListener(v -> initDownloadFlow());
     }
 
@@ -81,42 +109,55 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
             return;
         }
 
-        binding.dependencyInfo.setText("Looking for dependency...");
+        // Solo mostrar diálogo de confirmación
+        showDownloadConfirmationDialog(parts[0], parts[1], parts[2]);
+    }
+
+    private void showDownloadConfirmationDialog(String group, String artifact, String version) {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Confirm Download")
+                .setMessage("Do you want to download " + dependencyName + " and its dependencies?")
+                .setPositiveButton("Download", (dialog, which) -> {
+                    startDownloadProcess(group, artifact, version);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void startDownloadProcess(String group, String artifact, String version) {
         binding.dependencyInputLayout.setErrorEnabled(false);
+
+        // Mostrar UI de descarga
+        binding.dependencyInfo.setVisibility(View.GONE);
+        binding.overallProgress.setVisibility(View.VISIBLE);
+        binding.dependenciesRecyclerView.setVisibility(View.VISIBLE);
+
         setDownloadState(true);
 
-        var group = parts[0];
-        var artifact = parts[1];
-        var version = parts[2];
-        var resolver = new DependencyResolver(group, artifact, version, binding.cbSkipSubdependencies.isChecked(), buildSettings);
+        var resolver = new DependencyResolver(group, artifact, version,
+                binding.cbSkipSubdependencies.isChecked(), buildSettings);
         var handler = new Handler(Looper.getMainLooper());
 
-        class SetTextRunnable implements Runnable {
-            private final String text;
-
-            SetTextRunnable(String text) {
-                this.text = text;
-            }
-
-            @Override
-            public void run() {
-                binding.dependencyInfo.setText(text);
-            }
-        }
-
-        Executors.newSingleThreadExecutor().execute(() -> {
-            BuiltInLibraries.maybeExtractAndroidJar((message, progress) -> handler.post(new SetTextRunnable(message)));
+        downloadExecutor.execute(() -> {
+            BuiltInLibraries.maybeExtractAndroidJar((message, progress) ->
+                    handler.post(() -> binding.overallProgress.setIndeterminate(true)));
             BuiltInLibraries.maybeExtractCoreLambdaStubsJar();
 
             resolver.resolveDependency(new DependencyResolver.DependencyResolverCallback() {
                 @Override
                 public void onResolving(@NonNull Artifact artifact, @NonNull Artifact dependency) {
-                    handler.post(new SetTextRunnable("Resolving " + dependency + " for " + artifact + "..."));
+                    handler.post(() -> {
+                        DependencyDownloadItem item = findOrCreateDependencyItem(dependency);
+                        item.setState(DependencyDownloadItem.DownloadState.RESOLVING);
+                        dependencyAdapter.updateDependency(item);
+                    });
                 }
 
                 @Override
                 public void onResolutionComplete(@NonNull Artifact dep) {
-                    handler.post(new SetTextRunnable("Dependency " + dep + " resolved"));
+                    handler.post(() -> {
+                        updateDependencyState(dep, DependencyDownloadItem.DownloadState.COMPLETED);
+                    });
                 }
 
                 @Override
@@ -129,62 +170,102 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
 
                 @Override
                 public void onSkippingResolution(@NonNull Artifact dep) {
-                    handler.post(new SetTextRunnable("Skipping resolution for " + dep));
+                    handler.post(() -> {
+                        DependencyDownloadItem item = findOrCreateDependencyItem(dep);
+                        item.setState(DependencyDownloadItem.DownloadState.COMPLETED);
+                        dependencyAdapter.updateDependency(item);
+                    });
                 }
 
                 @Override
                 public void onVersionNotFound(@NonNull Artifact dep) {
-                    handler.post(new SetTextRunnable("Version not available for " + dep));
+                    handler.post(() -> {
+                        DependencyDownloadItem item = findOrCreateDependencyItem(dep);
+                        item.setError("Version not available");
+                        dependencyAdapter.updateDependency(item);
+                    });
                 }
 
                 @Override
                 public void onDependenciesNotFound(@NonNull Artifact dep) {
-                    handler.post(() -> new SetTextRunnable("Dependencies not found for \"" + dep + "\"").run());
+                    handler.post(() -> {
+                        DependencyDownloadItem item = findOrCreateDependencyItem(dep);
+                        item.setError("Dependencies not found");
+                        dependencyAdapter.updateDependency(item);
+                    });
                 }
 
                 @Override
                 public void onInvalidScope(@NonNull Artifact dep, @NonNull String scope) {
-                    handler.post(new SetTextRunnable("Invalid scope for " + dep + ": " + scope));
+                    handler.post(() -> {
+                        DependencyDownloadItem item = findOrCreateDependencyItem(dep);
+                        item.setError("Invalid scope: " + scope);
+                        dependencyAdapter.updateDependency(item);
+                    });
                 }
 
                 @Override
                 public void invalidPackaging(@NonNull Artifact dep) {
-                    handler.post(new SetTextRunnable("Invalid packaging for dependency " + dep));
+                    handler.post(() -> {
+                        DependencyDownloadItem item = findOrCreateDependencyItem(dep);
+                        item.setError("Invalid packaging");
+                        dependencyAdapter.updateDependency(item);
+                    });
                 }
 
                 @Override
                 public void onDownloadStart(@NonNull Artifact dep) {
-                    handler.post(new SetTextRunnable("Downloading dependency " + dep + "..."));
+                    handler.post(() -> {
+                        DependencyDownloadItem item = findOrCreateDependencyItem(dep);
+                        item.setState(DependencyDownloadItem.DownloadState.DOWNLOADING);
+                        dependencyAdapter.updateDependency(item);
+                        updateOverallProgress();
+                    });
                 }
 
                 @Override
                 public void onDownloadEnd(@NonNull Artifact dep) {
-                    handler.post(new SetTextRunnable("Dependency " + dep + " downloaded"));
+                    handler.post(() -> {
+                        updateDependencyState(dep, DependencyDownloadItem.DownloadState.COMPLETED);
+                        updateOverallProgress();
+                    });
                 }
 
                 @Override
                 public void onDownloadError(@NonNull Artifact dep, @NonNull Throwable e) {
                     handler.post(() -> {
+                        DependencyDownloadItem item = findOrCreateDependencyItem(dep);
+                        item.setError(e.getMessage());
+                        dependencyAdapter.updateDependency(item);
                         setDownloadState(false);
-                        SketchwareUtil.showAnErrorOccurredDialog(getActivity(), "Downloading dependency '" + dep + "' failed: " + Log.getStackTraceString(e));
+                        SketchwareUtil.showAnErrorOccurredDialog(getActivity(),
+                                "Downloading dependency '" + dep + "' failed: " + Log.getStackTraceString(e));
                     });
                 }
 
                 @Override
                 public void unzipping(@NonNull Artifact artifact) {
-                    handler.post(new SetTextRunnable("Unzipping dependency " + artifact));
+                    handler.post(() -> {
+                        updateDependencyState(artifact, DependencyDownloadItem.DownloadState.UNZIPPING);
+                    });
                 }
 
                 @Override
                 public void dexing(@NonNull Artifact dep) {
-                    handler.post(new SetTextRunnable("Dexing dependency " + dep));
+                    handler.post(() -> {
+                        updateDependencyState(dep, DependencyDownloadItem.DownloadState.DEXING);
+                    });
                 }
 
                 @Override
                 public void dexingFailed(@NonNull Artifact dependency, @NonNull Exception e) {
                     handler.post(() -> {
+                        DependencyDownloadItem item = findOrCreateDependencyItem(dependency);
+                        item.setError("Dexing failed: " + e.getMessage());
+                        dependencyAdapter.updateDependency(item);
                         setDownloadState(false);
-                        SketchwareUtil.showAnErrorOccurredDialog(getActivity(), "Dexing dependency '" + dependency + "' failed: " + Log.getStackTraceString(e));
+                        SketchwareUtil.showAnErrorOccurredDialog(getActivity(),
+                                "Dexing dependency '" + dependency + "' failed: " + Log.getStackTraceString(e));
                     });
                 }
 
@@ -193,7 +274,6 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                     handler.post(() -> {
                         SketchwareUtil.toast("Library downloaded successfully");
                         if (!notAssociatedWithProject) {
-                            new SetTextRunnable("Adding dependencies to project...").run();
                             var fileContent = FileUtil.readFile(localLibFile);
                             var enabledLibs = gson.fromJson(fileContent, Helper.TYPE_MAP_LIST);
                             enabledLibs.addAll(dependencies.stream()
@@ -210,15 +290,57 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         });
     }
 
+    private DependencyDownloadItem findOrCreateDependencyItem(Artifact artifact) {
+        for (DependencyDownloadItem item : downloadItems) {
+            if (item.getArtifact().equals(artifact)) {
+                return item;
+            }
+        }
+        DependencyDownloadItem newItem = new DependencyDownloadItem(artifact);
+        downloadItems.add(newItem);
+        dependencyAdapter.addDependency(newItem);
+        return newItem;
+    }
+
+    private void updateDependencyState(Artifact artifact, DependencyDownloadItem.DownloadState state) {
+        for (DependencyDownloadItem item : downloadItems) {
+            if (item.getArtifact().equals(artifact)) {
+                item.setState(state);
+                dependencyAdapter.updateDependency(item);
+                break;
+            }
+        }
+    }
+
+    private void updateOverallProgress() {
+        int completed = 0;
+        for (DependencyDownloadItem item : downloadItems) {
+            if (item.isCompleted()) completed++;
+        }
+
+        if (downloadItems.size() > 0) {
+            binding.overallProgress.setIndeterminate(false);
+            binding.overallProgress.setProgress((completed * 100) / downloadItems.size());
+        }
+    }
+
     private void setDownloadState(boolean downloading) {
-        binding.btnCancel.setVisibility(downloading ? View.GONE : View.VISIBLE);
+        binding.btnCancel.setVisibility(downloading ? View.VISIBLE : View.GONE);
+        binding.btnCancel.setText(downloading ? "Cancel Download" : "Cancel");
         binding.btnDownload.setEnabled(!downloading);
         binding.dependencyInput.setEnabled(!downloading);
         binding.cbSkipSubdependencies.setEnabled(!downloading);
         setCancelable(!downloading);
 
         if (!downloading) {
+            binding.dependencyInfo.setVisibility(View.VISIBLE);
+            binding.overallProgress.setVisibility(View.GONE);
+            binding.dependenciesRecyclerView.setVisibility(View.GONE);
             binding.dependencyInfo.setText(R.string.local_library_manager_dependency_info);
+
+            // Limpiar datos de descarga
+            downloadItems.clear();
+            dependencyAdapter.setDependencies(new ArrayList<>());
         }
     }
 

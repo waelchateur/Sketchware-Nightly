@@ -1,0 +1,133 @@
+package dev.aldi.sayuti.editor.manage;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import pro.sketchware.databinding.ItemDependencyDownloadBinding;
+
+
+
+public class DependencyDownloadAdapter extends RecyclerView.Adapter<DependencyDownloadAdapter.ViewHolder> {
+
+    private final List<DependencyDownloadItem> dependencies = new ArrayList<>();
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ItemDependencyDownloadBinding binding = ItemDependencyDownloadBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(binding);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        DependencyDownloadItem item = dependencies.get(position);
+        holder.bind(item);
+    }
+
+    @Override
+    public int getItemCount() {
+        return dependencies.size();
+    }
+
+    public void setDependencies(@NonNull List<DependencyDownloadItem> newDependencies) {
+        dependencies.clear();
+        dependencies.addAll(newDependencies);
+        notifyDataSetChanged();
+    }
+
+    public void updateDependency(@NonNull DependencyDownloadItem updatedItem) {
+        for (int i = 0; i < dependencies.size(); i++) {
+            if (dependencies.get(i).equals(updatedItem)) {
+                dependencies.set(i, updatedItem);
+                notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
+    public void addDependency(@NonNull DependencyDownloadItem item) {
+        dependencies.add(item);
+        notifyItemInserted(dependencies.size() - 1);
+    }
+
+    public void removeDependency(@NonNull DependencyDownloadItem item) {
+        int index = dependencies.indexOf(item);
+        if (index != -1) {
+            dependencies.remove(index);
+            notifyItemRemoved(index);
+        }
+    }
+
+    public List<DependencyDownloadItem> getDependencies() {
+        return new ArrayList<>(dependencies);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final ItemDependencyDownloadBinding binding;
+
+        public ViewHolder(@NonNull ItemDependencyDownloadBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        public void bind(@NonNull DependencyDownloadItem item) {
+            // Configurar nombre de la dependencia
+            binding.dependencyName.setText(item.getDisplayName());
+
+            // Configurar texto de progreso
+            binding.progressText.setText(item.getStatusMessage());
+
+            // Configurar indicador de progreso circular
+            switch (item.getState()) {
+                case PENDING:
+                case RESOLVING:
+                    binding.progressIndicator.setIndeterminate(true);
+                    binding.progressIndicator.setVisibility(View.VISIBLE);
+                    break;
+
+                case DOWNLOADING:
+                    binding.progressIndicator.setIndeterminate(false);
+                    binding.progressIndicator.setProgress(item.getProgress());
+                    binding.progressIndicator.setVisibility(View.VISIBLE);
+                    break;
+
+                case UNZIPPING:
+                case DEXING:
+                    binding.progressIndicator.setIndeterminate(true);
+                    binding.progressIndicator.setVisibility(View.VISIBLE);
+                    break;
+
+                case COMPLETED:
+                    binding.progressIndicator.setIndeterminate(false);
+                    binding.progressIndicator.setProgress(100);
+                    binding.progressIndicator.setVisibility(View.VISIBLE);
+                    break;
+
+                case ERROR:
+                    binding.progressIndicator.setVisibility(View.GONE);
+                    // Cambiar color del texto a error
+                    binding.progressText.setTextColor(
+                            binding.getRoot().getContext().getColor(android.R.color.holo_red_dark));
+                    break;
+
+                default:
+                    binding.progressIndicator.setVisibility(View.GONE);
+                    break;
+            }
+
+            // Resetear color del texto si no es error
+            if (item.getState() != DependencyDownloadItem.DownloadState.ERROR) {
+                binding.progressText.setTextColor(
+                        binding.getRoot().getContext().getColor(android.R.color.tertiary_text_light));
+            }
+        }
+    }
+}

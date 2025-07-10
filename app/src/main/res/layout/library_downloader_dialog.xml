@@ -1,4 +1,5 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -56,6 +57,30 @@
         android:paddingStart="8dp"
         android:text="@string/local_library_manager_skip_downloading_dependencies" />
 
+    <!-- Nuevo LinearProgressIndicator para progreso general -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/overall_progress"
+        style="@style/Widget.Material3Expressive.LinearProgressIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="16dp"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:trackStopIndicatorSize="0dp" />
+
+    <!-- Nuevo RecyclerView para mostrar dependencias individuales -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/dependencies_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="8dp"
+        android:maxHeight="200dp"
+        android:nestedScrollingEnabled="true"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -75,6 +100,7 @@
 
         <!-- Somehow `?attr/materialButtonStyle` doesn't work, I mean it works, but
              it's shows TextButton style somehow, currently using style directly, until we fix it -->
+
         <Button
             android:id="@+id/btn_download"
             style="@style/Widget.Material3Expressive.Button"
