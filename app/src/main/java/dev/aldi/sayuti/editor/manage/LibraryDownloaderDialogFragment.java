@@ -73,7 +73,6 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
 
         if (getArguments() == null) return;
 
-        // Configurar RecyclerView
         dependencyAdapter = new DependencyDownloadAdapter();
         binding.dependenciesRecyclerView.setAdapter(dependencyAdapter);
         binding.dependenciesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -129,7 +128,6 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
             return;
         }
 
-        // Solo mostrar diálogo de confirmación
         showDownloadConfirmationDialog(parts[0], parts[1], parts[2]);
     }
 
@@ -147,7 +145,6 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     private void startDownloadProcess(String group, String artifact, String version) {
         binding.dependencyInputLayout.setErrorEnabled(false);
 
-        // Mostrar UI de descarga
         binding.dependencyInfo.setVisibility(View.GONE);
         binding.overallProgress.setVisibility(View.VISIBLE);
         binding.dependenciesRecyclerView.setVisibility(View.VISIBLE);
@@ -359,7 +356,6 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
             binding.dependenciesRecyclerView.setVisibility(View.GONE);
             binding.dependencyInfo.setText(R.string.local_library_manager_dependency_info);
 
-            // Limpiar datos de descarga
             downloadItems.clear();
             dependencyAdapter.setDependencies(new ArrayList<>());
         }

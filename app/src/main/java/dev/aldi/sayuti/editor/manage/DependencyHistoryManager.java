@@ -28,8 +28,8 @@ public class DependencyHistoryManager {
     public void addDependency(String dependency) {
         List<String> history = getHistory();
         if (!history.contains(dependency)) {
-            history.add(0, dependency); // Agregar al inicio
-            if (history.size() > 50) { // Limitar a 50 items
+            history.add(0, dependency);
+            if (history.size() > 50) {
                 history = history.subList(0, 50);
             }
             saveHistory(history);

@@ -79,13 +79,9 @@ public class DependencyDownloadAdapter extends RecyclerView.Adapter<DependencyDo
         }
 
         public void bind(@NonNull DependencyDownloadItem item) {
-            // Configurar nombre de la dependencia
             binding.dependencyName.setText(item.getDisplayName());
-
-            // Configurar texto de progreso
             binding.progressText.setText(item.getStatusMessage());
 
-            // Configurar indicador de progreso circular
             switch (item.getState()) {
                 case PENDING:
                 case RESOLVING:
@@ -113,7 +109,6 @@ public class DependencyDownloadAdapter extends RecyclerView.Adapter<DependencyDo
 
                 case ERROR:
                     binding.progressIndicator.setVisibility(View.GONE);
-                    // Cambiar color del texto a error
                     binding.progressText.setTextColor(
                             binding.getRoot().getContext().getColor(android.R.color.holo_red_dark));
                     break;
@@ -123,7 +118,6 @@ public class DependencyDownloadAdapter extends RecyclerView.Adapter<DependencyDo
                     break;
             }
 
-            // Resetear color del texto si no es error
             if (item.getState() != DependencyDownloadItem.DownloadState.ERROR) {
                 binding.progressText.setTextColor(
                         binding.getRoot().getContext().getColor(android.R.color.tertiary_text_light));

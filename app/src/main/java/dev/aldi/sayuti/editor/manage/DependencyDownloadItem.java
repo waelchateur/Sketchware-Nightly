@@ -135,7 +135,6 @@ public class DependencyDownloadItem {
         }
     }
 
-    // Métodos de conveniencia para verificar estado
     public boolean isCompleted() {
         return state == DownloadState.COMPLETED;
     }
