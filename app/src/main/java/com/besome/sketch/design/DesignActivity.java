@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -464,15 +465,19 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         findViewById(R.id.file_name_container).setOnClickListener(this);
 
         btnRun = findViewById(R.id.btn_run);
-        btnRun.setOnClickListener(v -> {
-            if (currentBuildTask != null && !currentBuildTask.canceled) {
-                currentBuildTask.cancelBuild();
-                return;
-            }
+        btnRun.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (currentBuildTask != null && !currentBuildTask.canceled) {
+                     currentBuildTask.cancelBuild();
+                     return true;
+                }
 
-            BuildTask buildTask = new BuildTask(this);
-            currentBuildTask = buildTask;
-            buildTask.execute();
+               BuildTask buildTask = new BuildTask(this);
+               currentBuildTask = buildTask;
+               buildTask.execute();
+               return true;
+            }
+            return false;
         });
 
         Button btnOptions = findViewById(R.id.btn_options);
