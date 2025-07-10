@@ -1,5 +1,9 @@
 package dev.aldi.sayuti.editor.manage;
 
+import static android.net.ConnectivityManager.NetworkCallback;
+
+import android.content.Context;
+import android.net.ConnectivityManager;
 import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.createLibraryMap;
 
 import android.os.Bundle;
@@ -8,6 +12,8 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -53,6 +59,8 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     private DependencyHistoryAdapter historyAdapter;
 
     private boolean isSearchingPhase = false;
+    private ConnectivityManager connectivityManager;
+    private NetworkCallback networkCallback;
 
     @Nullable
     @Override
@@ -62,11 +70,13 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         if (downloadExecutor != null && !downloadExecutor.isShutdown()) {
             downloadExecutor.shutdownNow();
         }
+        unregisterNetworkCallback();
+        binding = null;
     }
 
     @Override
@@ -90,6 +100,9 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
 
         binding.btnCancel.setOnClickListener(v -> dismiss());
         binding.btnDownload.setOnClickListener(v -> initDownloadFlow());
+
+        connectivityManager = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        registerNetworkCallback();
     }
 
     private void setupAutoComplete() {
@@ -104,6 +117,35 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
             String selected = historyAdapter.getItem(position);
             binding.dependencyInput.setText(selected);
         });
+    }
+
+    private void registerNetworkCallback() {
+        networkCallback = new NetworkCallback() {
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                super.onAvailable(network);
+                if (binding != null) {
+                    requireActivity().runOnUiThread(() -> binding.btnDownload.setEnabled(true));
+                }
+            }
+
+            @Override
+            public void onLost(@NonNull Network network) {
+                super.onLost(network);
+                if (binding != null) {
+                    requireActivity().runOnUiThread(() -> binding.btnDownload.setEnabled(false));
+                }
+            }
+        };
+        connectivityManager.registerDefaultNetworkCallback(networkCallback);
+        // Initial check
+        binding.btnDownload.setEnabled(isNetworkAvailable());
+    }
+
+    private void unregisterNetworkCallback() {
+        if (connectivityManager != null && networkCallback != null) {
+            connectivityManager.unregisterNetworkCallback(networkCallback);
+        }
     }
 
     public void setOnLibraryDownloadedTask(OnLibraryDownloadedTask onLibraryDownloadedTask) {
@@ -374,6 +416,11 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
             downloadItems.clear();
             dependencyAdapter.setDependencies(new ArrayList<>());
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+        return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
     }
 
     public interface OnLibraryDownloadedTask {
