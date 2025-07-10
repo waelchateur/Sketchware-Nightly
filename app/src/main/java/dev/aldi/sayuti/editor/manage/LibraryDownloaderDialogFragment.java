@@ -336,7 +336,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
             if (item.isCompleted()) completed++;
         }
 
-        if (downloadItems.size() > 0) {
+        if (!downloadItems.isEmpty()) {
             binding.overallProgress.setIndeterminate(false);
             binding.overallProgress.setProgress((completed * 100) / downloadItems.size());
         }

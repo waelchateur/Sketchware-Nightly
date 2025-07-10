@@ -37,7 +37,6 @@ public class DependencyDownloadItem {
         this.errorMessage = null;
     }
 
-    // Getters
     public String getName() {
         return name;
     }
@@ -74,7 +73,6 @@ public class DependencyDownloadItem {
         return artifact;
     }
 
-    // Estado y progreso
     public void setState(DownloadState state) {
         this.state = state;
         updateStatusMessage();
