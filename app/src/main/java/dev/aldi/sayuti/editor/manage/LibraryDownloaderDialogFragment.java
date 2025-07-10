@@ -49,6 +49,9 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     private String localLibFile;
     private OnLibraryDownloadedTask onLibraryDownloadedTask;
 
+    private DependencyHistoryManager historyManager;
+    private DependencyHistoryAdapter historyAdapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,6 +78,9 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         binding.dependenciesRecyclerView.setAdapter(dependencyAdapter);
         binding.dependenciesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        historyManager = new DependencyHistoryManager(getContext());
+        setupAutoComplete();
+
         downloadExecutor = Executors.newSingleThreadExecutor();
 
         notAssociatedWithProject = getArguments().getBoolean("notAssociatedWithProject", false);
@@ -88,6 +94,20 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
             dismiss();
         });
         binding.btnDownload.setOnClickListener(v -> initDownloadFlow());
+    }
+
+    private void setupAutoComplete() {
+        List<String> history = historyManager.getHistory();
+        historyAdapter = new DependencyHistoryAdapter(getContext(), history,
+                historyManager, this::setupAutoComplete);
+
+        binding.dependencyInput.setAdapter(historyAdapter);
+        binding.dependencyInput.setThreshold(1);
+
+        binding.dependencyInput.setOnItemClickListener((parent, view, position, id) -> {
+            String selected = historyAdapter.getItem(position);
+            binding.dependencyInput.setText(selected);
+        });
     }
 
     public void setOnLibraryDownloadedTask(OnLibraryDownloadedTask onLibraryDownloadedTask) {
@@ -272,6 +292,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                 @Override
                 public void onTaskCompleted(@NonNull List<String> dependencies) {
                     handler.post(() -> {
+                        historyManager.addDependency(dependencyName);
                         SketchwareUtil.toast("Library downloaded successfully");
                         if (!notAssociatedWithProject) {
                             var fileContent = FileUtil.readFile(localLibFile);

@@ -20,6 +20,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dependency_input_layout"
+        style="@style/Widget.SketchwarePro.TextInputLayout.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -28,7 +29,7 @@
         android:importantForAutofill="noExcludeDescendants"
         app:placeholderText="@string/local_library_manager_dependency_example">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/dependency_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
