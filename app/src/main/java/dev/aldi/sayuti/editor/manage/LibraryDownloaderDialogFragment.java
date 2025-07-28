@@ -55,9 +55,6 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     private String localLibFile;
     private OnLibraryDownloadedTask onLibraryDownloadedTask;
 
-    private DependencyHistoryManager historyManager;
-    private DependencyHistoryAdapter historyAdapter;
-
     private ConnectivityManager connectivityManager;
     private NetworkCallback networkCallback;
 
@@ -88,34 +85,16 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         binding.dependenciesRecyclerView.setAdapter(dependencyAdapter);
         binding.dependenciesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        historyManager = new DependencyHistoryManager(requireContext());
-        setupAutoComplete();
-
         downloadExecutor = Executors.newSingleThreadExecutor();
 
         notAssociatedWithProject = getArguments().getBoolean("notAssociatedWithProject", false);
         buildSettings = (BuildSettings) getArguments().getSerializable("buildSettings");
         localLibFile = getArguments().getString("localLibFile");
 
-        binding.btnCancel.setOnClickListener(v -> dismiss());
         binding.btnDownload.setOnClickListener(v -> initDownloadFlow());
 
         connectivityManager = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         registerNetworkCallback();
-    }
-
-    private void setupAutoComplete() {
-        List<String> history = historyManager.getHistory();
-        historyAdapter = new DependencyHistoryAdapter(getContext(), history,
-                historyManager, this::setupAutoComplete);
-
-        binding.dependencyInput.setAdapter(historyAdapter);
-        binding.dependencyInput.setThreshold(1);
-
-        binding.dependencyInput.setOnItemClickListener((parent, view, position, id) -> {
-            String selected = historyAdapter.getItem(position);
-            binding.dependencyInput.setText(selected);
-        });
     }
 
     private void registerNetworkCallback() {
@@ -329,7 +308,6 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                 @Override
                 public void onTaskCompleted(@NonNull List<String> dependencies) {
                     handler.post(() -> {
-                        historyManager.addDependency(dependencyName);
                         SketchwareUtil.toast("Library downloaded successfully");
                         if (!notAssociatedWithProject) {
                             var fileContent = FileUtil.readFile(localLibFile);
@@ -384,10 +362,8 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
 
     private void setDownloadState(boolean downloading) {
         if (downloading) {
-            binding.btnCancel.setVisibility(View.GONE);
             binding.btnDownload.setVisibility(View.GONE);
         } else {
-            binding.btnCancel.setVisibility(View.VISIBLE);
             binding.btnDownload.setVisibility(View.VISIBLE);
             binding.btnDownload.setEnabled(true);
         }
