@@ -108,7 +108,7 @@ dependencies {
     minApi21Implementation fileTree(
             dir: "libs",
             include: ["*.jar", "*.aar"],
-            exclude: ["jaxp.jar", "kotlinc.jar", "proguard-base-7.2.2.jar", "kotlin-reflect.jar" , "kotlin-script-runtime.jar" , "the-unsafe.jar", "trove4j.jar"])
+            exclude: ["kotlinc.jar", "proguard-base-7.2.2.jar"])
     // Multidex support
     implementation "androidx.multidex:multidex:2.0.1"
     implementation "androidx.appcompat:appcompat:1.7.0"
@@ -151,7 +151,6 @@ dependencies {
 
     implementation "com.google.code.gson:gson:2.11.0"
     implementation "com.madgag:scpkix-jdk15on:1.47.0.2"
-    implementation "com.google.guava:guava:33.4.0-jre"
 
     implementation 'io.noties.markwon:core:4.6.2'
 
@@ -170,7 +169,6 @@ dependencies {
     minApi21Implementation "org.eclipse.jdt:ecj:3.13.0"
     minApi26Implementation "org.eclipse.jdt:ecj:3.26.0"
 
-    minApi26Implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.10'
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:6.1'
     implementation 'io.github.itsaky:nb-javac-android:17.0.0.3'
     implementation 'javax.xml.stream:stax-api:1.0-2'
