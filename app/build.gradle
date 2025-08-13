@@ -163,7 +163,7 @@ dependencies {
 
     implementation "com.github.Cosmic-Ide:DependencyResolver:290880eb6c"
 
-    compileOnly("org.jetbrains.kotlin:kotlin-compiler:2.1.21")
+    runtimeOnly("org.jetbrains.kotlin:kotlin-compiler:2.1.21")
     minApi21Implementation "net.sf.proguard:proguard-base:6.0.3"
     minApi26Implementation files('libs/proguard-base-7.2.2.jar')
     minApi26Implementation 'com.guardsquare:proguard-core:9.0.2'
