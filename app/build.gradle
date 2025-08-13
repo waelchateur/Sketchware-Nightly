@@ -108,7 +108,7 @@ dependencies {
     minApi21Implementation fileTree(
             dir: "libs",
             include: ["*.jar", "*.aar"],
-            exclude: ["kotlinc.jar", "proguard-base-7.2.2.jar"])
+            exclude: ["proguard-base-7.2.2.jar"])
     // Multidex support
     implementation "androidx.multidex:multidex:2.0.1"
     implementation "androidx.appcompat:appcompat:1.7.0"
@@ -159,8 +159,11 @@ dependencies {
     //noinspection GradleDependency
     implementation "com.squareup.okio:okio:3.1.0"
 
+    implementation "com.github.waelchateur:kotlinc-for-sketchware:2.1.21_rc1"
+
     implementation "com.github.Cosmic-Ide:DependencyResolver:290880eb6c"
 
+    compileOnly("org.jetbrains.kotlin:kotlin-compiler:2.1.21")
     minApi21Implementation "net.sf.proguard:proguard-base:6.0.3"
     minApi26Implementation files('libs/proguard-base-7.2.2.jar')
     minApi26Implementation 'com.guardsquare:proguard-core:9.0.2'
