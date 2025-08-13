@@ -49,7 +49,6 @@ class KotlinCompiler(
 
         val compiler = K2JVMCompiler()
         val collector = DiagnosticCollector()
-        val plugins = getCompilerPlugins(workspace).map(File::getAbsolutePath).toTypedArray()
 
         val args = K2JVMCompilerArguments().apply {
             compileJava = false
@@ -60,7 +59,8 @@ class KotlinCompiler(
             useFastJarFileSystem = true
             kotlinHome = mKotlinHome.absolutePath
             destination = mClassOutput.absolutePath
-            pluginClasspaths = plugins
+            pluginClasspaths = emptyArray()
+            System.setProperty("kotlin.compiler.disabled.plugins", "*")
         }
 
         LogUtil.d(TAG, "Running kotlinc with these arguments: $arguments")

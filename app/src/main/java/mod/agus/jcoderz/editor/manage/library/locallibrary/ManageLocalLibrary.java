@@ -42,7 +42,7 @@ public class ManageLocalLibrary {
                 // fall-through to shared error handler
             }
 
-            SketchwareUtil.toastError("Invalid Local library configuration found! Temporarily using none");
+           // SketchwareUtil.toastError("Invalid Local library configuration found! Temporarily using none");
         }
         list = new ArrayList<>();
     }

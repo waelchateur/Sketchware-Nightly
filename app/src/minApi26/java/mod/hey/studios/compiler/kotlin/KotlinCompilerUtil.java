@@ -59,26 +59,6 @@ public class KotlinCompilerUtil {
         return mFilesToCompile;
     }
 
-    /**
-     * Returns a list of available kotlin compiler plugins (.jar)
-     * found in `/.sketchware/data/xxx/files/kt_plugins` dir.
-     */
-    static List<File> getCompilerPlugins(yq workspace) {
-        String scId = workspace.sc_id;
-
-        File pluginDir = new File(new FilePathUtil().getPathKotlinCompilerPlugins(scId));
-        if (!pluginDir.exists()) {
-            return Collections.emptyList();
-        }
-
-        File[] children = pluginDir.listFiles(c -> c.getName().endsWith(".jar"));
-        if (children == null) {
-            return Collections.emptyList();
-        }
-
-        return new ArrayList<>(Arrays.asList(children));
-    }
-
     private static List<File> getSourceFiles(File dir) {
         List<File> files = new ArrayList<>();
 
