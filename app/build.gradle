@@ -21,36 +21,16 @@ android {
         namespace "pro.sketchware"
         //noinspection ExpiredTargetSdkVersion since we don't target getting Sketchware Pro on Google Play.
         targetSdkVersion 28
+        minSdkVersion 26
         versionCode 150
         versionName "v7.0.0-SNAPSHOT-" + shortCommitHash
         // Enable multidex support
         multiDexEnabled true
-        
         buildConfigField("String", "GIT_HASH", "\"${gitCommitHash}\"")
-
-        buildConfigField("String", "FLAVOR_NAME_WITH_AABS", "\"minApi26\"")
-        buildConfigField("String", "FLAVOR_NAME_WITHOUT_AABS", "\"minApi21\"")
-
         buildConfigField("String", "VERSION_NAME_WITHOUT_FLAVOR", "\"v7.0.0-SNAPSHOT-${shortCommitHash}\"")
-
         buildConfigField("String", "SKETCHUB_API_KEY", "\"${System.getenv("SKETCHUB_API_KEY")}\"")
     }
 
-    flavorDimensions = ["api"]
-    productFlavors {
-        minApi26 {
-            dimension "api"
-            minSdkVersion 26
-            versionNameSuffix "-minApi26"
-            isDefault = true
-        }
-
-        minApi21 {
-            dimension "api"
-            minSdkVersion 21
-            versionNameSuffix "-minApi21"
-        }
-    }
 
     buildTypes {
         release {
@@ -101,14 +81,7 @@ android {
 }
 
 dependencies {
-    minApi26Implementation fileTree(
-            dir: "libs",
-            include: ["*.jar", "*.aar"],
-            exclude: "proguard-base-7.2.2.jar")
-    minApi21Implementation fileTree(
-            dir: "libs",
-            include: ["*.jar", "*.aar"],
-            exclude: ["proguard-base-7.2.2.jar"])
+    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
     // Multidex support
     implementation "androidx.multidex:multidex:2.0.1"
     implementation "androidx.appcompat:appcompat:1.7.0"
@@ -140,10 +113,10 @@ dependencies {
     implementation 'io.coil-kt:coil:2.0.0'
     implementation 'io.coil-kt:coil-svg:2.0.0'
 
-    minApi26Implementation "com.android.tools.build:bundletool:1.15.6"
+    implementation "com.android.tools.build:bundletool:1.15.6"
 
     //noinspection GradleDependency copied from above dependency for not just runtime access
-    minApi26Implementation "com.google.protobuf:protobuf-java:3.19.2"
+    implementation "com.google.protobuf:protobuf-java:3.19.2"
     //noinspection GradleDependency
     implementation "com.android.tools:sdklib:25.3.0", { exclude group: "com.intellij", module: "annotations" }
     implementation "com.android.tools:r8:8.7.18"
@@ -159,19 +132,15 @@ dependencies {
     //noinspection GradleDependency
     implementation "com.squareup.okio:okio:3.1.0"
 
-    api "com.github.waelchateur:kotlinc-for-sketchware:2.1.21_rc1"
+    implementation "com.github.waelchateur:kotlinc-for-sketchware:2.1.21_rc1"
 
     implementation "com.github.Cosmic-Ide:DependencyResolver:290880eb6c"
 
     compileOnly "org.jetbrains.kotlin:kotlin-compiler:2.1.21"
-    minApi21Implementation "net.sf.proguard:proguard-base:6.0.3"
-    minApi26Implementation files('libs/proguard-base-7.2.2.jar')
-    minApi26Implementation 'com.guardsquare:proguard-core:9.0.2'
+    implementation 'com.guardsquare:proguard-core:9.0.2'
 
     //noinspection GradleDependency
-    minApi21Implementation "org.eclipse.jdt:ecj:3.13.0"
-    minApi26Implementation "org.eclipse.jdt:ecj:3.26.0"
-
+    implementation "org.eclipse.jdt:ecj:3.26.0"
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:6.1'
     implementation 'io.github.itsaky:nb-javac-android:17.0.0.3'
     implementation 'javax.xml.stream:stax-api:1.0-2'
