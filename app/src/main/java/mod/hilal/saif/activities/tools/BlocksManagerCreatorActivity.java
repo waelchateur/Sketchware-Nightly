@@ -302,7 +302,6 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         binding.spec2.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         binding.spec2.setMaxLines(1);
         binding.code.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        binding.code.setMinLines(10);
         binding.spec2Layout.setVisibility(View.GONE);
     }
 
